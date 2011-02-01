@@ -18,6 +18,10 @@ import com.globalsight.www.webservices.AmbassadorServiceLocator;
 @SuppressWarnings("static-access")
 public class FileProfilesCommand extends Command {
 
+    @Override
+    public String getName() {
+        return "fileprofiles";
+    }
 
     @Override
     public void usage() {
