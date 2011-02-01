@@ -1,0 +1,82 @@
+<project name="gscli" default="build" basedir=".">
+
+  <property name="src.dir"            value="${basedir}/src"/>
+  <property name="generated.src.dir"  value="${basedir}/generated"/>
+  <property name="test.src.dir"       value="${basedir}/test"/>
+  <property name="lib.dir"            value="${basedir}/lib"/>
+  <property name="build.dir"          value="${basedir}/build"/>
+  <property name="src.classes.dir"    value="${build.dir}/classes"/>
+  <property name="test.classes.dir"   value="${build.dir}/test"/>
+  <property name="javadoc.dir"        value="${basedir}/doc"/>
+  <property name="dist.dir"           value="${basedir}/dist"/>
+  <property name="dist.dir"           value="${basedir}/dist"/>
+  <property name="dist.doc.dir"       value="${dist.dir}/doc"/>
+  <property name="dist.src.dir"       value="${dist.dir}/src"/>
+  <property name="dist.src.zip"       value="${dist.dir}/src.zip"/>
+
+  <property name="gscli.jar"           
+            value="${build.dir}/gscli.jar" />
+  <property name="dist.zip"           
+            value="${dist.dir}/gscli.zip" />
+
+  <path id="project.class.path">
+      <pathelement location="${src.classes.dir}" />
+      <fileset dir="${lib.dir}">
+          <include name="**/*.jar"/>
+      </fileset>
+      <fileset dir="axis-1_4/lib">
+          <include name="**/*.jar"/>
+      </fileset>
+   </path>
+
+  <target name="clean">
+      <delete failonerror="false" dir="${build.dir}"/>
+      <delete failonerror="false" dir="${javadoc.dir}"/>
+      <delete failonerror="false" dir="${dist.dir}"/>
+  </target>
+
+  <target name="build.src">
+    <echo message="Compiling source to ${src.classes.dir}."/>
+    <mkdir dir="${src.classes.dir}" />
+    <javac srcdir="${generated.src.dir}"
+           destdir="${src.classes.dir}"
+           debug="on"
+           optimize="on"
+           deprecation="on"
+           fork="yes"
+           memoryMaximumSize="256m"
+           encoding="UTF-8"
+           source="1.6"
+           target="1.6" >
+      <classpath refid="project.class.path"/>
+      <compilerarg value="-Xswitchcheck" compiler="modern"/>
+      <compilerarg value="-nowarn" compiler="modern"/>
+      <compilerarg value="-Xlint" compiler="javac1.6"/>
+    </javac>
+    <javac srcdir="${src.dir}"
+           destdir="${src.classes.dir}"
+           debug="on"
+           optimize="on"
+           deprecation="on"
+           fork="yes"
+           memoryMaximumSize="256m"
+           encoding="UTF-8"
+           source="1.6"
+           target="1.6" >
+      <classpath refid="project.class.path"/>
+      <compilerarg value="-Xswitchcheck" compiler="modern"/>
+      <compilerarg value="-nowarn" compiler="modern"/>
+      <compilerarg value="-Xlint" compiler="javac1.6"/>
+    </javac>
+  </target>
+
+  <target name="build.jar" depends="build.src">
+      <jar compress="false" jarfile="${gscli.jar}">
+          <fileset dir="${src.classes.dir}"/>
+      </jar>
+  </target>
+
+  <target name="build" depends="build.jar">
+  </target>
+
+</project>
