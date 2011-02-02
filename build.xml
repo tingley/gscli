@@ -29,6 +29,12 @@
       </fileset>
    </path>
 
+  <path id="test.class.path">
+      <path refid="project.class.path" />
+      <pathelement location="${test.classes.dir}" />
+  </path>
+
+
   <target name="clean">
       <delete failonerror="false" dir="${build.dir}"/>
       <delete failonerror="false" dir="${javadoc.dir}"/>
@@ -78,5 +84,56 @@
 
   <target name="build" depends="build.jar">
   </target>
+
+  <!-- Run a class against the environment classpath.  You must
+     - pass the -Dclass=[classname] parameter as an argument.  -->
+  <target name="run">
+     <fail message="Usage: ant run -Dclass=[class] -Dargs=[args]">
+         <condition>
+             <not>
+                 <isset property="class" />
+             </not>
+         </condition>
+     </fail>
+     <echo message="class: ${class}" />
+
+     <java classname="${class}" classpathref="test.class.path"
+            dir="${basedir}" failonerror="true" fork="true">
+           <jvmarg value="-Xmx512m" />
+           <jvmarg value="-Dweb.dir=${build.web.dir}" />      
+           <jvmarg value="-Dtomcat.home=${tomcat.home}" />
+<!--    
+        <jvmarg value="-Xrunhprof:cpu=samples" />
+-->     
+        <arg line="${args}" />
+     </java>
+  </target>
+
+
+  <!-- Run a class against the environment classpath in debug mode.
+     - To debug the class, run
+            jdb -sourcepath "src;test" -attach v
+       from another shell. -->
+  <target name="debug">
+     <fail message="Usage: ant debug -Dclass=[class] -Dargs=[args]">
+         <condition>
+             <not>
+                 <isset property="class" />
+             </not>
+         </condition>
+     </fail>
+
+     <java classname="${class}" classpathref="test.class.path"
+            dir="${basedir}" failonerror="true" fork="true">
+           <jvmarg value="-Xmx512m" />
+           <jvmarg value="-Dweb.dir=${build.web.dir}" />
+           <jvmarg value="-Dtomcat.home=${tomcat.home}" />
+       <jvmarg value="-Xdebug" />
+       <jvmarg value="-Xrunjdwp:transport=dt_shmem,server=y,address=v,suspend=y" />     
+        <arg line="${args}" />
+     </java>
+  </target>
+
+
 
 </project>
