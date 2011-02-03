@@ -36,9 +36,10 @@ public class FileProfilesCommand extends Command {
     }
 
     @Override
-    protected void execute(CommandLine command) throws Exception {
+    protected void execute(CommandLine command, UserData userData,
+                        WebService webService) throws Exception {
         List<Filter> filters = getFilters(command);
-        List<FileProfile> profiles = getProfiles();
+        List<FileProfile> profiles = getProfiles(webService);
 PROFILE:
         for (FileProfile fp : profiles) {
             for (Filter f : filters) {
@@ -75,31 +76,18 @@ PROFILE:
     
     @Override
     public Options getOptions() {
-        Options opts = new Options();
+        Options opts = getDefaultOptions();
         opts.addOption(SOURCE_OPT);
         opts.addOption(TARGET_OPT);
         opts.addOption(EXTENSION_OPT);
         return opts;
     }
     
-    public static final String GS_URL = "http://globalsightsaas.com/globalsight/services/AmbassadorWebService";
-    
-    private List<FileProfile> getProfiles() {
+    private List<FileProfile> getProfiles(WebService webService) {
         try {
-            AmbassadorServiceLocator locator = new AmbassadorServiceLocator();
-            Ambassador service = locator.getAmbassadorWebService(new URL(GS_URL));
-            String accessToken = service.login("tingley", "wsisgreat");
-            System.out.println("Got token: " + accessToken);
-            
-            String fileProfileInfoEx = service.getFileProfileInfoEx(accessToken);
-            //System.out.println("fileProfileInfoEx: " + fileProfileInfoEx);
-             
+            String fileProfileInfoEx = webService.getFileProfileData();
             XMLInputFactory factory = XMLInputFactory.newFactory();
-                        
             return new FileProfilesParser(factory).parse(fileProfileInfoEx);
-            
-            // Getting the user home directory: 
-            // System.getProperty("user.home")
         }
         catch (Exception e) {
             throw new RuntimeException(e);

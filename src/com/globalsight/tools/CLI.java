@@ -1,6 +1,6 @@
 package com.globalsight.tools;
 
-import java.net.URL;
+import java.io.File;
 import java.util.Arrays;
 import java.util.Formatter;
 import java.util.Map;
@@ -17,6 +17,9 @@ public class CLI {
     private SortedMap<String, Class<? extends Command>> commands =
         new TreeMap<String, Class<? extends Command>>();
     
+    //     public static final String GS_URL = "http://globalsightsaas.com/globalsight/services/AmbassadorWebService";
+    
+
     public void run(String[] args) {
         registerDefaultCommands(commands);
         if (args.length == 0) {
@@ -40,7 +43,23 @@ public class CLI {
         CommandLineParser parser = new GnuParser();
         try {
             CommandLine cl = parser.parse(command.getOptions(), args);
-            command.execute(cl);
+            UserData userData = new UserData();
+            File dataFile = getUserDataFile();
+            if (dataFile != null) {
+                if (!dataFile.exists()) {
+                    System.out.println("Creating " + dataFile);
+                    dataFile.createNewFile();
+                }
+                userData = UserData.load(dataFile);
+            }
+            else {
+                
+            }
+            command.handle(cl, userData);
+            if (dataFile != null && userData.isDirty()) {
+                System.out.println("Saving to " + dataFile + "...");
+                userData.store(dataFile);
+            }
         }
         catch (MissingOptionException e) {
             System.err.println(e.getMessage());
@@ -49,6 +68,24 @@ public class CLI {
         catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Return data file location in the user's home directory.  Note that
+     * this file may not exist.
+     * @return file location, or null if the file can not be created 
+     *     (no home directory set, or directory does not exist)
+     */
+    File getUserDataFile() {
+        String homeDirPath = System.getProperty("user.home");
+        if (homeDirPath == null) {
+            return null;
+        }
+        File homeDir = new File(homeDirPath);
+        if (!homeDir.exists()) {
+            return null;
+        }
+        return new File(homeDir, ".globalsight");
     }
     
     void registerDefaultCommands(Map<String, Class<? extends Command>> commands) {
