@@ -15,30 +15,16 @@ public abstract class Command {
     
     public abstract String getDescription();
     
+    private boolean verbose = true; 
+    
     public Options getOptions() {
         return getDefaultOptions();
     }
     
-    public void handle(CommandLine command, UserData userData) 
-                                throws Exception {
-        String url = null;
-        if (command.hasOption(URL)) {
-            url = command.getOptionValue(URL);
-        }
-        else {
-            url = userData.getServer().getUrl(); 
-        }
-        if (url == null) {
-            die("No URL specified.  Specify with --url=<url>");
-        }
-        WebService ws = new WebService(url);
-        // TODO handle auth
-        execute(command, userData, ws);
-    }
-    
-    protected abstract void execute(CommandLine command, UserData userData, 
-                WebService webService) throws Exception;
-    
+    // Default implementation that actually wants a webservice.
+    public abstract void handle(CommandLine command, UserData userData) 
+                                throws Exception;
+   
     // Print usage for this command to stderr and die
     protected void usage() {
         HelpFormatter f = new HelpFormatter();
@@ -64,6 +50,12 @@ public abstract class Command {
     protected void die(String message) {
         System.err.println(message);
         System.exit(1);
+    }
+    
+    protected void verbose(String message) {
+        if (verbose) {
+            System.out.println(message);
+        }
     }
     
     static final String URL = "url";

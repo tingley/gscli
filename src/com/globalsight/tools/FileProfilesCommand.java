@@ -16,7 +16,7 @@ import com.globalsight.www.webservices.Ambassador;
 import com.globalsight.www.webservices.AmbassadorServiceLocator;
 
 @SuppressWarnings("static-access")
-public class FileProfilesCommand extends Command {
+public class FileProfilesCommand extends WebServiceCommand {
 
     @Override
     public String getName() {
@@ -86,7 +86,7 @@ PROFILE:
     private List<FileProfile> getProfiles(WebService webService) {
         try {
             String fileProfileInfoEx = webService.getFileProfileData();
-            XMLInputFactory factory = XMLInputFactory.newFactory();
+            XMLInputFactory factory = XMLInputFactory.newInstance();
             return new FileProfilesParser(factory).parse(fileProfileInfoEx);
         }
         catch (Exception e) {

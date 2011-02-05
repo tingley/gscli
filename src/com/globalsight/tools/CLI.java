@@ -90,6 +90,7 @@ public class CLI {
     
     void registerDefaultCommands(Map<String, Class<? extends Command>> commands) {
         commands.put("fileprofiles", FileProfilesCommand.class);
+        commands.put("set-server", SetServerCommand.class);
     }
     
     private static Command getCommand(Class<? extends Command> clazz) {

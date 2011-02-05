@@ -9,7 +9,6 @@
   <property name="test.classes.dir"   value="${build.dir}/test"/>
   <property name="javadoc.dir"        value="${basedir}/doc"/>
   <property name="dist.dir"           value="${basedir}/dist"/>
-  <property name="dist.dir"           value="${basedir}/dist"/>
   <property name="dist.doc.dir"       value="${dist.dir}/doc"/>
   <property name="dist.src.dir"       value="${dist.dir}/src"/>
   <property name="dist.src.zip"       value="${dist.dir}/src.zip"/>
@@ -101,7 +100,6 @@
             dir="${basedir}" failonerror="true" fork="true">
            <jvmarg value="-Xmx512m" />
            <jvmarg value="-Dweb.dir=${build.web.dir}" />      
-           <jvmarg value="-Dtomcat.home=${tomcat.home}" />
 <!--    
         <jvmarg value="-Xrunhprof:cpu=samples" />
 -->     
@@ -127,7 +125,6 @@
             dir="${basedir}" failonerror="true" fork="true">
            <jvmarg value="-Xmx512m" />
            <jvmarg value="-Dweb.dir=${build.web.dir}" />
-           <jvmarg value="-Dtomcat.home=${tomcat.home}" />
        <jvmarg value="-Xdebug" />
        <jvmarg value="-Xrunjdwp:transport=dt_shmem,server=y,address=v,suspend=y" />     
         <arg line="${args}" />
