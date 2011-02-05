@@ -27,6 +27,15 @@ public class WebService {
         url = sb.toString();
     }
     
+    public String login(String username, String password) {
+        try {
+            return getService().login(username, password);
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
     public String getFileProfileData() {
         try {
             return getService().getFileProfileInfoEx(getToken());
@@ -50,20 +59,14 @@ public class WebService {
         }
     }
     
-    // XXX Clean up exceptions
-    protected String getToken() {
-        if (authToken != null) {
-            return authToken;
+    private String getToken() {
+        if (authToken == null) {
+            throw new IllegalStateException("No auth token");
         }
-        try {
-            // TODO: handle auth
-            String accessToken = getService().login("tingley", "wsisgreat");
-            System.out.println("Got token: " + accessToken);
-            // TODO: put token somewhere, return service
-            return accessToken;
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e); // haha omg
-        }
+        return authToken;
+    }
+    
+    public void setToken(String token) {
+        this.authToken = token;
     }
 }

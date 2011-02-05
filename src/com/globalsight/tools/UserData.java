@@ -54,11 +54,7 @@ public class UserData {
         }
         dirty = true;
     }
-    
-    private String key(String p, String rest) {
-        return prefix(p) + rest;
-    }
-    
+        
     public void setAuthData(AuthData data) {
         store("auth", data);
     }
@@ -77,6 +73,18 @@ public class UserData {
         return new Server(select("server"));
     }
     
+    public void setSession(Session session) { 
+        store("session", session);
+    }
+    
+    public Session getSession() {
+        return new Session(select("session"));
+    }
+    
+    private String key(String p, String rest) {
+        return prefix(p) + rest;
+    }
+
     private String prefix(String p) {
         return p + '.';
     }
