@@ -53,7 +53,7 @@ public class CLI {
                 userData = UserData.load(dataFile);
             }
             else {
-                
+                throw new RuntimeException("Unimplemented");
             }
             command.handle(cl, userData);
             if (dataFile != null && userData.isDirty()) {
@@ -90,7 +90,7 @@ public class CLI {
     
     void registerDefaultCommands(Map<String, Class<? extends Command>> commands) {
         commands.put("fileprofiles", FileProfilesCommand.class);
-        commands.put("set-server", SetServerCommand.class);
+        commands.put("config", ConfigCommand.class);
     }
     
     private static Command getCommand(Class<? extends Command> clazz) {

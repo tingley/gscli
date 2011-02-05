@@ -42,4 +42,14 @@ public class AuthData implements UserDataComponent {
     public String getAuthToken() {
         return authToken;
     }
+    
+    public void setUsername(String name) {
+        this.username = name;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    public void setAuthToken(String token) {
+        this.authToken = token;
+    }
 }

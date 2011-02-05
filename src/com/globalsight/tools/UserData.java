@@ -47,6 +47,9 @@ public class UserData {
     
     private void store(String prefix, UserDataComponent data) {
         for (Map.Entry<String, String> e : data.getValues().entrySet()) {
+            if (e.getValue() == null) {
+                continue;
+            }
             properties.setProperty(key(prefix, e.getKey()), e.getValue());
         }
         dirty = true;
