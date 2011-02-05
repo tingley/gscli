@@ -1,15 +1,9 @@
 package com.globalsight.tools;
 
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.rmi.RemoteException;
-
-import javax.xml.rpc.ServiceException;
 
 import com.globalsight.www.webservices.Ambassador;
 import com.globalsight.www.webservices.AmbassadorServiceLocator;
-import com.globalsight.www.webservices.AmbassadorWebServiceSoapBindingStub;
-import com.globalsight.www.webservices.WebServiceException;
 
 public class WebService {
 
@@ -39,6 +33,15 @@ public class WebService {
     public String getFileProfileData() {
         try {
             return getService().getFileProfileInfoEx(getToken());
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    public String getUniqueJobName(String jobName) {
+        try {
+            return getService().getUniqueJobName(getToken(), jobName);
         }
         catch (Exception e) {
             throw new RuntimeException(e);

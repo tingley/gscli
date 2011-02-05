@@ -28,6 +28,7 @@ public abstract class WebServiceCommand extends Command {
         }
         verbose("Using auth token " + token);
         ws.setToken(token);
+        // TODO: handle auth failure?
         execute(command, userData, ws);
     }
 

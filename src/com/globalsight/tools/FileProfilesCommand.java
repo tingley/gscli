@@ -1,6 +1,5 @@
 package com.globalsight.tools;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,9 +10,6 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 
 import org.apache.commons.cli.Option;
-
-import com.globalsight.www.webservices.Ambassador;
-import com.globalsight.www.webservices.AmbassadorServiceLocator;
 
 @SuppressWarnings("static-access")
 public class FileProfilesCommand extends WebServiceCommand {
