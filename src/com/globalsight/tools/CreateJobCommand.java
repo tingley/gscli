@@ -1,8 +1,15 @@
 package com.globalsight.tools;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Vector;
 
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
@@ -10,15 +17,14 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.CommandLine;
 
 @SuppressWarnings("static-access")
+// TODO: can't I just let it specify the fileprofile and infer the locales?  yes
+// XXX Wow, there is problem with webservices, the absolute file path isn't stripping
+// the '../..' out?
 public class CreateJobCommand extends WebServiceCommand {
 
     @Override
     protected void execute(CommandLine command, UserData userData,
             WebService webService) throws Exception {
-        // Get a unique job name 
-        String baseJobName = command.getOptionValue(JOBNAME);
-        String jobName = webService.getUniqueJobName(baseJobName);
-        verbose("Got unique job name: " + jobName);
         // XXX Need to convert file profile to ID
         String fileProfileId = command.getOptionValue(FILEPROFILE);
         try { // Temporary code
@@ -29,6 +35,9 @@ public class CreateJobCommand extends WebServiceCommand {
                     fileProfileId + ")");
         }
         
+        // TODO source and target locale
+        String targetLocale = command.getOptionValue(TARGET);
+        
         // Convert all remaining arguments to files
         List<File> files = new ArrayList<File>();
         for (String path : command.getArgs()) {
@@ -38,13 +47,56 @@ public class CreateJobCommand extends WebServiceCommand {
             }
             files.add(f);
         }
-        // TODO: Each file needs to be uploaded in 5M chunks
-        // TODO: is there some sort of initial job creation thing to do?
-        // Followed by a 'ok, we're done' call?
-        // --> yes, it's the 'createJob' call
-        // TODO: attribute files and supplemental files and comments
-    }
 
+        // Get a unique job name 
+        String baseJobName = command.getOptionValue(JOBNAME);
+        String jobName = webService.getUniqueJobName(baseJobName);
+        verbose("Got unique job name: " + jobName);
+        List<String> filePaths = new ArrayList<String>();
+        for (File f : files) {
+            filePaths.add(uploadFile(f, jobName, fileProfileId, webService));
+        }
+        webService.createJob(jobName, filePaths, fileProfileId, targetLocale);
+    }
+    
+    private static long MAX_SEND_SIZE = 5 * 1000 * 1024; // 5M
+    
+    // Returns the filepath that was sent to the server
+    String uploadFile(File file, String jobName, String fileProfileId,
+                    WebService webService) throws Exception {
+        String filePath = file.getAbsolutePath();
+        // XXX This is so janky - why do we have to do this?
+        filePath = filePath.substring(filePath.indexOf(File.separator) + 1);     
+        verbose("Uploading " + filePath + " to job " + jobName);
+        InputStream is = null;
+        try {
+            long bytesRemaining = file.length();
+            is = new BufferedInputStream(new FileInputStream(file));
+            while (bytesRemaining > 0) {
+                // Safe cast because it's bounded by MAX_SEND_SIZE
+                int size = (int)Math.min(bytesRemaining, MAX_SEND_SIZE);
+                byte[] bytes = new byte[size];
+                int count = is.read(bytes);
+                if (count <= 0) {
+                    break;
+                }
+                bytesRemaining -= count;
+                verbose("Uploading chunk 1: " + size + " bytes");
+                webService.uploadFile(filePath, jobName, fileProfileId, bytes);
+            }
+            verbose("Finished uploading " + filePath);
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }      
+        finally {
+            if (is != null) {
+                is.close();
+            }
+        }
+        return filePath;
+    }
+    
     static final String SOURCE = "source", 
                         TARGET = "target",
                         FILEPROFILE = "fileprofile",
