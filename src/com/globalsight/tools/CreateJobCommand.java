@@ -20,6 +20,8 @@ import org.apache.commons.cli.CommandLine;
 // TODO: can't I just let it specify the fileprofile and infer the locales?  yes
 // XXX Wow, there is problem with webservices, the absolute file path isn't stripping
 // the '../..' out?
+// TODO: I should assume the fileprofile target locale by default, but allow overrides
+// via --target
 public class CreateJobCommand extends WebServiceCommand {
 
     @Override
@@ -97,16 +99,9 @@ public class CreateJobCommand extends WebServiceCommand {
         return filePath;
     }
     
-    static final String SOURCE = "source", 
-                        TARGET = "target",
+    static final String TARGET = "target",
                         FILEPROFILE = "fileprofile",
                         JOBNAME = "name";
-    static final Option SOURCE_OPT = OptionBuilder
-        .withArgName("sourceLocale")
-        .hasArg()
-        .withDescription("source locale code")
-        .isRequired()
-        .create(SOURCE);
     static final Option TARGET_OPT = OptionBuilder
         .withArgName("targetLocale")
         .hasArg()
@@ -129,7 +124,6 @@ public class CreateJobCommand extends WebServiceCommand {
     @Override
     public Options getOptions() {
         Options opts = getDefaultOptions();
-        opts.addOption(SOURCE_OPT);
         opts.addOption(TARGET_OPT);
         opts.addOption(FILEPROFILE_OPT);
         opts.addOption(JOBNAME_OPT);

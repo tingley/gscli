@@ -23,9 +23,6 @@
       <fileset dir="${lib.dir}">
           <include name="**/*.jar"/>
       </fileset>
-      <fileset dir="axis-1_4/lib">
-          <include name="**/*.jar"/>
-      </fileset>
    </path>
 
   <path id="test.class.path">
@@ -56,7 +53,6 @@
       <classpath refid="project.class.path"/>
       <compilerarg value="-Xswitchcheck" compiler="modern"/>
       <compilerarg value="-nowarn" compiler="modern"/>
-      <compilerarg value="-Xlint" compiler="javac1.6"/>
     </javac>
     <javac srcdir="${src.dir}"
            destdir="${src.classes.dir}"

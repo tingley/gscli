@@ -71,33 +71,18 @@ public class WebService {
     
     public void createJob(String jobName, List<String> filePaths,
                 String fpId, String targetLocale) {
-         // TODO: comment, priority, CVSModules, attributes
-         // XXX WHere does sourcelocale come from?
-        
-         HashMap<String, Object> args = new HashMap<String, Object>();
-         args.put("jobName", jobName);
-         args.put("comment", "");    // nullable?
-         args.put("filePaths", new Vector<String>(filePaths)); // Vector
-         Vector<String> fpIds = new Vector<String>();
-         fpIds.add(fpId);
-         args.put("fileProfileIds", fpIds);   // Vector
-         Vector<String> targetLocales = new Vector<String>();
-         targetLocales.add(targetLocale);
-         args.put("targetLocales", targetLocales);
-         args.put("cvsModules", Collections.emptyMap());
-         // This is a stringified int from 1 to 6??
-         args.put("priority", "3");
-         // XXX This is specially crafted XML.  See UploadFilesDialog.getAttributesXml
-         args.put("attributes", "");
          try {
-             getService().createJob(args);
+             getService().createJob(getToken(), jobName, "", 
+                     filePaths.get(0), fpId, targetLocale);
          }
          catch (Exception e) {
              throw new RuntimeException(e);
-         }        
+         }
+         /* For reference, this is the minimal attr xml
+         <?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<attributes/>
+         */
     }
 
-    
     protected Ambassador getService() {
         if (service != null) {
             return service;
