@@ -1,11 +1,9 @@
 package com.globalsight.tools;
 
 import java.net.URL;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Vector;
 
 import javax.xml.stream.XMLInputFactory;
 
@@ -74,11 +72,17 @@ public class WebService {
         }
     }
     
+    /**
+     * Create a job, using the default target locales for the 
+     * file profile.
+     */
     public void createJob(String jobName, List<String> filePaths,
-                String fpId, String targetLocale) {
+                FileProfile fileProfile) {
          try {
+             
              getService().createJob(getToken(), jobName, "", 
-                     filePaths.get(0), fpId, targetLocale);
+                     serializeStrings(filePaths), fileProfile.getId(),
+                     serializeStrings(fileProfile.getTargetLocales()));
          }
          catch (Exception e) {
              throw new RuntimeException(e);
@@ -88,6 +92,21 @@ public class WebService {
          */
     }
 
+    private String serializeStrings(Collection<String> strings) {
+        StringBuilder sb = new StringBuilder();
+        boolean first = true;
+        for (String s : strings) {
+            if (!first) {
+                sb.append('|');
+            }
+            else {
+                first = false;
+            }
+            sb.append(s);
+        }
+        return sb.toString();
+    }
+    
     protected Ambassador getService() {
         if (service != null) {
             return service;

@@ -23,6 +23,8 @@ public abstract class WebServiceCommand extends Command {
         }
         WebService ws = new WebService(url, XMLInputFactory.newInstance());
         // XXX Ugly
+        // TODO: also, lazily calculate this -- right now we always do it
+        // even if the command dies immediately
         String token = getAuthToken(userData);
         if (token == null) {
             token = authorize(ws, userData);
