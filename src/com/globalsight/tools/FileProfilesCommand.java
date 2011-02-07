@@ -35,7 +35,7 @@ public class FileProfilesCommand extends WebServiceCommand {
     protected void execute(CommandLine command, UserData userData,
                         WebService webService) throws Exception {
         List<Filter> filters = getFilters(command);
-        List<FileProfile> profiles = getProfiles(webService);
+        List<FileProfile> profiles = webService.getFileProfiles();
 PROFILE:
         for (FileProfile fp : profiles) {
             for (Filter f : filters) {
@@ -77,17 +77,6 @@ PROFILE:
         opts.addOption(TARGET_OPT);
         opts.addOption(EXTENSION_OPT);
         return opts;
-    }
-    
-    private List<FileProfile> getProfiles(WebService webService) {
-        try {
-            String fileProfileInfoEx = webService.getFileProfileData();
-            XMLInputFactory factory = XMLInputFactory.newInstance();
-            return new FileProfilesParser(factory).parse(fileProfileInfoEx);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
     
     private List<Filter> getFilters(CommandLine command) {
