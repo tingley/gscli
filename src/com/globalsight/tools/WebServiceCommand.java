@@ -2,6 +2,8 @@ package com.globalsight.tools;
 
 import java.util.Date;
 
+import javax.xml.stream.XMLInputFactory;
+
 import org.apache.commons.cli.CommandLine;
 
 public abstract class WebServiceCommand extends Command {
@@ -19,7 +21,7 @@ public abstract class WebServiceCommand extends Command {
         if (url == null) {
             die("No URL specified.  Specify with --url=<url>");
         }
-        WebService ws = new WebService(url);
+        WebService ws = new WebService(url, XMLInputFactory.newInstance());
         // XXX Ugly
         String token = getAuthToken(userData);
         if (token == null) {

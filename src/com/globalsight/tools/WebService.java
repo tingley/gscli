@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import javax.xml.stream.XMLInputFactory;
+
 import com.globalsight.www.webservices.Ambassador;
 import com.globalsight.www.webservices.AmbassadorServiceLocator;
 
@@ -15,8 +17,9 @@ public class WebService {
     private String url;
     private Ambassador service;
     private String authToken;
+    private XMLInputFactory factory;
     
-    public WebService(String baseUrl) {
+    public WebService(String baseUrl, XMLInputFactory factory) {
         StringBuilder sb = new StringBuilder();
         sb.append(baseUrl);
         if (!baseUrl.endsWith("/")) {
@@ -24,6 +27,7 @@ public class WebService {
         }
         sb.append("/services/AmbassadorWebService");
         url = sb.toString();
+        this.factory = factory;
     }
     
     public String login(String username, String password) {
@@ -35,9 +39,10 @@ public class WebService {
         }
     }
     
-    public String getFileProfileData() {
+    public List<FileProfile> getFileProfiles() {
         try {
-            return getService().getFileProfileInfoEx(getToken());
+            String fileProfileInfoEx = getService().getFileProfileInfoEx(getToken());
+            return new FileProfilesParser(factory).parse(fileProfileInfoEx);
         }
         catch (Exception e) {
             throw new RuntimeException(e);
