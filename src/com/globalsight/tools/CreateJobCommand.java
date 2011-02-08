@@ -20,8 +20,6 @@ import org.apache.commons.cli.Options;
  * unless one is specified on the command line.
  */
 @SuppressWarnings("static-access")
-// XXX Wow, there is problem with webservices, the absolute file path isn't stripping
-// the '../..' out?
 // TODO: I should assume the fileprofile target locale by default, but allow overrides
 // via --target
 public class CreateJobCommand extends WebServiceCommand {
@@ -69,7 +67,7 @@ public class CreateJobCommand extends WebServiceCommand {
             if (!f.exists() || f.isDirectory()) {
                 die("Not a file: " + f);
             }
-            files.add(f);
+            files.add(f.getCanonicalFile());
         }
 
         // Get a job name either from command line or first file
