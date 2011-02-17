@@ -1,11 +1,15 @@
 package com.globalsight.tools;
 
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+
+import net.sundell.snax.SNAXUserException;
 
 import com.globalsight.www.webservices.Ambassador;
 import com.globalsight.www.webservices.AmbassadorServiceLocator;
@@ -28,48 +32,40 @@ public class WebService {
         this.factory = factory;
     }
     
-    public String login(String username, String password) {
-        try {
-            return getService().login(username, password);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public String login(String username, String password) throws RemoteException {
+        return getService().login(username, password);
     }
     
-    public List<FileProfile> getFileProfiles() {
+    public List<FileProfile> getFileProfiles() throws RemoteException {
         try {
             String fileProfileInfoEx = getService().getFileProfileInfoEx(getToken());
             return new FileProfilesParser(factory).parse(fileProfileInfoEx);
         }
-        catch (Exception e) {
+        catch (RemoteException e) {
+            throw e;
+        }
+        catch (XMLStreamException e) {
+            throw new RuntimeException(e);
+        }
+        catch (SNAXUserException e) {
             throw new RuntimeException(e);
         }
     }
     
-    public String getUniqueJobName(String jobName) {
-        try {
-            return getService().getUniqueJobName(getToken(), jobName);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public String getUniqueJobName(String jobName) throws RemoteException {
+        return getService().getUniqueJobName(getToken(), jobName);
     }
     
     // webService.uploadFile(filePath, jobName, fileProfileId, bytes);
-    public void uploadFile(String path, String jobName, String fpId, byte[] data) {
-        try {
-            HashMap<String, Object> args = new HashMap<String, Object>();
-            args.put("accessToken", getToken());
-            args.put("filePath", path);
-            args.put("jobName", jobName);
-            args.put("fileProfileId", fpId);
-            args.put("bytes", data);
-            getService().uploadFile(args);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public void uploadFile(String path, String jobName, String fpId, 
+                byte[] data) throws RemoteException {
+        HashMap<String, Object> args = new HashMap<String, Object>();
+        args.put("accessToken", getToken());
+        args.put("filePath", path);
+        args.put("jobName", jobName);
+        args.put("fileProfileId", fpId);
+        args.put("bytes", data);
+        getService().uploadFile(args);
     }
     
     /**
@@ -77,16 +73,10 @@ public class WebService {
      * file profile.
      */
     public void createJob(String jobName, List<String> filePaths,
-                FileProfile fileProfile) {
-         try {
-             
-             getService().createJob(getToken(), jobName, "", 
-                     serializeStrings(filePaths), fileProfile.getId(),
-                     serializeStrings(fileProfile.getTargetLocales()));
-         }
-         catch (Exception e) {
-             throw new RuntimeException(e);
-         }
+                FileProfile fileProfile) throws RemoteException {
+         getService().createJob(getToken(), jobName, "", 
+                 serializeStrings(filePaths), fileProfile.getId(),
+                 serializeStrings(fileProfile.getTargetLocales()));
          /* For reference, this is the minimal attr xml
          <?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<attributes/>
          */

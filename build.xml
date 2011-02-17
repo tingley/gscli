@@ -89,7 +89,6 @@
              </not>
          </condition>
      </fail>
-     <echo message="class: ${class}" />
 
      <java classname="${class}" classpathref="test.class.path"
             dir="${basedir}" failonerror="true" fork="true">

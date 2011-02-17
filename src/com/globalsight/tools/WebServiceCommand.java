@@ -1,5 +1,6 @@
 package com.globalsight.tools;
 
+import java.rmi.RemoteException;
 import java.util.Date;
 
 import javax.xml.stream.XMLInputFactory;
@@ -26,16 +27,45 @@ public abstract class WebServiceCommand extends Command {
         // TODO: also, lazily calculate this -- right now we always do it
         // even if the command dies immediately
         String token = getAuthToken(userData);
-        if (token == null) {
-            token = authorize(ws, userData);
-            userData.setSession(new Session(token));
+        try {
+            execWithAuth(ws, userData, command, token);
         }
-        verbose("Using auth token " + token);
-        ws.setToken(token);
-        // TODO: handle auth failure?
-        execute(command, userData, ws);
+        catch (RemoteException e) {
+            ErrorParser parser = new ErrorParser();
+            Error error = parser.parse(e.getMessage());
+            if (error instanceof InvalidTokenError) {
+                try {
+                    execWithAuth(ws, userData, command, null);
+                }
+                catch (RemoteException e2) {
+                    dieWithError(parser.parse(e2.getMessage()));
+                }
+            }
+            else {
+                dieWithError(error);
+            }
+        }
     }
 
+    void execWithAuth(WebService ws, UserData userData, CommandLine command,
+                      String token) throws Exception {
+        if (token == null) {
+            token = authorize(ws, userData);
+            verbose("Received token " + token);
+            userData.setSession(new Session(token));
+        }
+        else {
+            verbose("Using cached auth token " + token);
+        }
+        ws.setToken(token);
+        execute(command, userData, ws);
+    }
+    
+    private void dieWithError(Error error) {
+        die("Webservice error (" + error.getStatus() + "): " +
+                error.getError());
+    }
+    
     protected String authorize(WebService ws, UserData userData) 
                         throws Exception {
         AuthData auth = userData.getAuthData();
