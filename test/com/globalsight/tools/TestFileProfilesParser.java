@@ -2,15 +2,14 @@ package com.globalsight.tools;
 
 import static org.junit.Assert.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.xml.stream.XMLInputFactory;
 
 import org.junit.Test;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 public class TestFileProfilesParser {
 
@@ -22,8 +21,8 @@ public class TestFileProfilesParser {
             List<FileProfile> profiles = 
                     new FileProfilesParser(factory).parse(SAMPLE_FILE_PROFILE_XML);
             assertEquals(6, profiles.size());
-            expect(profiles.get(0), "1071", "OpenTM2", "89", "OpenTM2 profile", 
-                   Sets.newTreeSet(Lists.newArrayList("htm", "html")),
+            expect(profiles.get(0), "1071", "OpenTM2", "89", "OpenTM2 profile",
+                   new TreeSet<String>(Arrays.asList(new String[] { "htm", "html"})),
                    "en_US", set("de_DE"));
             expect(profiles.get(1), "1072", "OpenTM2-TXT", "89", null, 
                     set("txt"), "en_US", set("de_DE"));
@@ -43,7 +42,7 @@ public class TestFileProfilesParser {
     }
     
     private SortedSet<String> set(String...s) {
-        return Sets.newTreeSet(Lists.newArrayList(s));
+        return new TreeSet<String>(Arrays.asList(s));
     }
     
     private void expect(FileProfile fp, String id, String name, String l10nProfile,
