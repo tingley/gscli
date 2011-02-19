@@ -49,13 +49,11 @@ public class WebService {
         }
     }
 
-    public String getJobs() throws RemoteException {
-  //      try {
+    public List<Job> getJobs() throws RemoteException {
+        try {
             String jobsXml = getService().fetchJobsPerCompany(getToken());
-            //return new JobsParser(factory).parse(jobsXml);
-            return jobsXml;
-/*        }
-
+            return new JobsParser(factory).parse(jobsXml);
+        }
         catch (XMLStreamException e) {
  
             throw new RuntimeException(e);
@@ -63,7 +61,6 @@ public class WebService {
         catch (SNAXUserException e) {
             throw new RuntimeException(e);
         }
-        */
     }
     
     public String getUniqueJobName(String jobName) throws RemoteException {

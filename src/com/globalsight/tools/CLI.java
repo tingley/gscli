@@ -92,7 +92,7 @@ public class CLI {
         commands.put("fileprofiles", FileProfilesCommand.class);
         commands.put("config", ConfigCommand.class);
         commands.put("create-job", CreateJobCommand.class);
-        commands.put("show-jobs", ShowJobsCommand.class);
+        commands.put("jobs", ShowJobsCommand.class);
     }
     
     private static Command getCommand(Class<? extends Command> clazz) {
