@@ -70,6 +70,25 @@
     </javac>
   </target>
 
+  <target name="build.test" depends="build.src">
+    <echo message="Compiling source to ${test.classes.dir}."/>
+    <mkdir dir="${test.classes.dir}" />
+    <javac srcdir="${test.src.dir}"
+           destdir="${test.classes.dir}"
+           debug="on"
+           optimize="on"
+           deprecation="on"
+           fork="yes"
+           memoryMaximumSize="256m"
+           encoding="UTF-8"
+           source="1.6"
+           target="1.6" >
+      <classpath refid="test.class.path"/>
+      <compilerarg value="-Xswitchcheck" compiler="modern"/>
+      <compilerarg value="-Xlint" compiler="javac1.6"/>
+    </javac>
+  </target>
+
   <target name="build.jar" depends="build.src">
       <jar compress="false" jarfile="${gscli.jar}">
           <fileset dir="${src.classes.dir}"/>
@@ -125,6 +144,12 @@
      </java>
   </target>
 
+  <target name="test" depends="build.test">
+    <junit fork="no" printsummary="yes" haltonfailure="no">
+      <classpath refid="test.class.path" />
+      <test name="com.globalsight.tools.AllTests" />
+    </junit>
+  </target>
 
 
 </project>
