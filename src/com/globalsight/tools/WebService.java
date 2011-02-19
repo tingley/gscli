@@ -41,15 +41,29 @@ public class WebService {
             String fileProfileInfoEx = getService().getFileProfileInfoEx(getToken());
             return new FileProfilesParser(factory).parse(fileProfileInfoEx);
         }
-        catch (RemoteException e) {
-            throw e;
-        }
         catch (XMLStreamException e) {
             throw new RuntimeException(e);
         }
         catch (SNAXUserException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public String getJobs() throws RemoteException {
+  //      try {
+            String jobsXml = getService().fetchJobsPerCompany(getToken());
+            //return new JobsParser(factory).parse(jobsXml);
+            return jobsXml;
+/*        }
+
+        catch (XMLStreamException e) {
+ 
+            throw new RuntimeException(e);
+        }
+        catch (SNAXUserException e) {
+            throw new RuntimeException(e);
+        }
+        */
     }
     
     public String getUniqueJobName(String jobName) throws RemoteException {
