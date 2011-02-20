@@ -93,6 +93,7 @@ public class CLI {
         commands.put("config", ConfigCommand.class);
         commands.put("create-job", CreateJobCommand.class);
         commands.put("jobs", ShowJobsCommand.class);
+        commands.put("workflow", ShowWorkflowCommand.class);
     }
     
     private static Command getCommand(Class<? extends Command> clazz) {

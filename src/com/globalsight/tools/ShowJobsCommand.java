@@ -17,7 +17,9 @@ public class ShowJobsCommand extends WebServiceCommand {
 
     void printShort(Job job) {
         Formatter f = new Formatter(System.out);
-        f.format("%-8s%-14s%s\n", job.getId(), job.getDisplayState(), 
+        // XXX Hack: just displaying the first WFId
+        f.format("%-8s%-4s%-14s%s\n", job.getId(), 
+        		job.getWorkflows().get(0).getId(), job.getDisplayState(), 
                  job.getName());
     }
     

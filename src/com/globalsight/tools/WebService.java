@@ -63,6 +63,54 @@ public class WebService {
         }
     }
     
+    // Argument to this needs to be a WFId from a job
+    public String getWorkflow(Long id) throws RemoteException {
+    	String taskXml = 
+    		getService().getCurrentTasksInWorkflow(getToken(), id);
+    	System.out.println(taskXml);
+    	/* Task XML
+ <?xml version="1.0" encoding="UTF-8" ?>
+  <tasksInWorkflow>
+    <workflowId>9</workflowId>
+    <task>
+            <id>258</id>
+            <name>Translation1_1000</name>
+            <state>ACTIVE</state>
+    </task>     
+  </tasksInWorkflow>
+*/
+    	// note: nullable name field
+    	String taskXml2 = getService().getTasksInJob(getToken(), 1008, "Translation1_1000");
+    	System.out.println(taskXml2);
+        return getService().fetchWorkflowRelevantInfo(getToken(), id.toString());
+        /* WF XML:
+<?xml version="1.0" encoding="UTF-8" ?>
+<WorkflowInfo>  
+    <workflowId>9</workflowId>
+    <targetLocale>fr_FR</targetLocale>
+    <state>DISPATCHED</state>
+    <percentageCompletion>0</percentageCompletion>
+    <currentActivity>Translation1</currentActivity>
+    <estimatedTranslateCompletionDate>2/24/11 5:00:00 PM UTC</estimatedTranslate
+CompletionDate>
+    <estimatedCompletionDate>2/24/11 5:00:00 PM UTC</estimatedCompletionDate>
+    <workflowPriority>3</workflowPriority>
+    <wordCountSummary>  
+            <leverageOption>Leverage in context matches</leverageOption>
+            <100%>0</100%>
+            <95%-99%>0</95%-99%>
+            <85%-94%>0</85%-94%>
+            <75%-84%>0</75%-84%>
+            <noMatch>196</noMatch>
+            <repetitions>3</repetitions>
+            <InContextMatches>0</InContextMatches>
+            <total>199</total>
+    </wordCountSummary>
+</WorkflowInfo>
+
+         */
+    }
+    
     public String getUniqueJobName(String jobName) throws RemoteException {
         return getService().getUniqueJobName(getToken(), jobName);
     }
