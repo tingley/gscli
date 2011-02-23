@@ -78,10 +78,27 @@ public class WebService {
             <state>ACTIVE</state>
     </task>     
   </tasksInWorkflow>
-*/
+*/  
     	// note: nullable name field
-    	String taskXml2 = getService().getTasksInJob(getToken(), 1008, "Translation1_1000");
-    	System.out.println(taskXml2);
+    	//String taskXml2 = getService().getTasksInJob(getToken(), 1008, "Translation1_1000");
+    	//System.out.println(taskXml2);
+    	/* getTasksInJob output -- note this requires a user to be both admin + pm
+<?xml version="1.0" encoding="UTF-8" ?>
+ <tasksInJob>
+     <jobId>1008</jobId>
+     <task>     
+             <id>258</id>
+             <workflowId>9</workflowId>
+             <name>Translation1_1000</name>
+             <state>ACTIVE</state>
+             <estimatedAcceptanceDate>2/21/11 5:00:00 PM UTC</estimatedAcceptanceDate>
+             <assignees>All qualified users</assignees>
+             <acceptedDate></acceptedDate>
+             <estimatedCompletionDate>2/22/11 5:00:00 PM UTC</estimatedCompletionDate>
+             <completedDate></completedDate>
+     </task>    
+ </tasksInJob>
+    	 */
         return getService().fetchWorkflowRelevantInfo(getToken(), id.toString());
         /* WF XML:
 <?xml version="1.0" encoding="UTF-8" ?>
