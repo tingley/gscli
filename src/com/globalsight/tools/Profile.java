@@ -20,7 +20,7 @@ public class Profile implements UserDataComponent {
     // XXX The asymmetry between this and getValues() is pretty bogus
     public Profile(String profileName, Map<String, String> props) {
         this.profileName = profileName;
-        this.username = props.get("user");
+        this.username = props.get("username");
         this.password = props.get("password");
         this.url = props.get("url");
     }
@@ -28,7 +28,7 @@ public class Profile implements UserDataComponent {
     @Override
     public Map<String, String> getValues() {
         Map<String, String> v = new HashMap<String, String>();
-        v.put(profileName + ".user", username);
+        v.put(profileName + ".username", username);
         v.put(profileName + ".password", password);
         v.put(profileName + ".url", url);
         return v;

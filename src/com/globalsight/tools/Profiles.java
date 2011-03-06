@@ -13,7 +13,7 @@ public class Profiles implements UserDataComponent {
         Map<String, Map<String, String>> m = 
             new HashMap<String, Map<String, String>>();
         for (Map.Entry<String, String> e : props.entrySet()) {
-            String[] parts = e.getKey().split(".");
+            String[] parts = e.getKey().split("\\.");
             if (parts.length != 2) {
                 continue; // TODO: warn
             }

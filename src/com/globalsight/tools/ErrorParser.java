@@ -10,7 +10,7 @@ public class ErrorParser {
     static final String E_TOKEN = 
         "The security information passed to the web service is not consistent.";
     public Error parse(String errorXml) {
-        String status = "Unknown", error = "Unknown";
+        String status = null, error = null;
         
         Matcher m = Pattern.compile("<status>(.*)</status>").matcher(errorXml);
         if (m.find()) {
@@ -19,6 +19,12 @@ public class ErrorParser {
         Matcher m2 = Pattern.compile("<error>(.*)</error>").matcher(errorXml);
         if (m2.find()) {
             error = m2.group(1);
+        }
+        if (status == null) {
+            status = "Unknown";
+        }
+        if (error == null) {
+            error = errorXml;
         }
         
         if (S_FAILED.equals(status) && E_TOKEN.equals(error)) {
