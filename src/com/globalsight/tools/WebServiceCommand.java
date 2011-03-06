@@ -22,6 +22,16 @@ public abstract class WebServiceCommand extends Command {
             profile = userData.getProfiles()
                 .getProfile(command.getOptionValue(PROFILE));
         }
+        else {
+            profile = userData.getProfiles().getDefaultProfile();
+            if (profile != null) {
+                verbose("Using default profile '" + 
+                        profile.getProfileName() + "'");
+            }
+            else {
+                die("No default profile set; must use --profile");
+            }
+        }
         String url = null;
         if (command.hasOption(URL)) {
             url = command.getOptionValue(URL);
@@ -62,7 +72,6 @@ public abstract class WebServiceCommand extends Command {
     static final Option PROFILE_OPT = OptionBuilder
         .withArgName(PROFILE)
         .hasArg()
-        .isRequired()
         .withDescription("profile name")
         .create(PROFILE);
     
