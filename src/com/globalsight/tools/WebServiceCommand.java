@@ -6,18 +6,28 @@ import java.util.Date;
 import javax.xml.stream.XMLInputFactory;
 
 import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.Options;
 
+@SuppressWarnings("static-access")
 public abstract class WebServiceCommand extends Command {
 
+    private Profile profile;
+    
     // Default implementation that actually wants a webservice.
     public void handle(CommandLine command, UserData userData) 
                                 throws Exception {
+        if (command.hasOption(PROFILE)) {
+            profile = userData.getProfiles()
+                .getProfile(command.getOptionValue(PROFILE));
+        }
         String url = null;
         if (command.hasOption(URL)) {
             url = command.getOptionValue(URL);
         }
-        else {
-            url = userData.getServer().getUrl(); 
+        else if (profile != null){
+            url = profile.getUrl(); 
         }
         if (url == null) {
             die("No URL specified.  Specify with --url=<url>");
@@ -26,6 +36,7 @@ public abstract class WebServiceCommand extends Command {
         // XXX Ugly
         // TODO: also, lazily calculate this -- right now we always do it
         // even if the command dies immediately
+        // TODO: auth token needs to be stored per-profile
         String token = getAuthToken(userData);
         try {
             execWithAuth(ws, userData, command, token);
@@ -47,6 +58,21 @@ public abstract class WebServiceCommand extends Command {
         }
     }
 
+    static final String PROFILE = "profile";
+    static final Option PROFILE_OPT = OptionBuilder
+        .withArgName(PROFILE)
+        .hasArg()
+        .isRequired()
+        .withDescription("profile name")
+        .create(PROFILE);
+    
+    @Override
+    public Options getOptions() {
+        Options options = super.getOptions();
+        options.addOption(PROFILE_OPT);
+        return options;
+    }
+    
     void execWithAuth(WebService ws, UserData userData, CommandLine command,
                       String token) throws Exception {
         if (token == null) {
@@ -66,16 +92,24 @@ public abstract class WebServiceCommand extends Command {
                 error.getError());
     }
     
+    protected Profile getProfile() {
+        return profile;
+    }
+    
     protected String authorize(WebService ws, UserData userData) 
                         throws Exception {
-        AuthData auth = userData.getAuthData();
-        if (auth.getUsername() == null) {
+        String username = null, password = null;
+        if (getProfile() != null) {
+            username = getProfile().getUsername();
+            password = getProfile().getPassword();
+        }
+        if (username == null) {
             die("No username specified.  Specify with --user=<username>");
         }
-        if (auth.getPassword() == null) {
+        if (password == null) {
             die("No password specified.  Specify with --password=<password>");
         }
-        return ws.login(auth.getUsername(), auth.getPassword());
+        return ws.login(username, password);
     }
     
     protected String getAuthToken(UserData userData) throws Exception {

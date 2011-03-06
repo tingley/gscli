@@ -72,7 +72,7 @@ PROFILE:
     
     @Override
     public Options getOptions() {
-        Options opts = getDefaultOptions();
+        Options opts = super.getOptions();
         opts.addOption(SOURCE_OPT);
         opts.addOption(TARGET_OPT);
         opts.addOption(EXTENSION_OPT);

@@ -54,23 +54,15 @@ public class UserData {
         }
         dirty = true;
     }
-        
-    public void setAuthData(AuthData data) {
-        store("auth", data);
-    }
+     
     
-    public AuthData getAuthData() {
-        // XXX What is the behavior here if the data is missing?
-        // What if it's only partially missing?
-        return new AuthData(select("auth"));
-    }
-    
-    public void setServer(Server data) {
-        store("server", data);
-    }
+    public Profiles getProfiles() {
+        return new Profiles(select("profiles"));
 
-    public Server getServer() {
-        return new Server(select("server"));
+    }
+    
+    public void setProfiles(Profiles profiles) {
+        store("profiles", profiles);
     }
     
     public void setSession(Session session) { 

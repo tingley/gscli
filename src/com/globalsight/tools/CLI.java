@@ -90,7 +90,7 @@ public class CLI {
     
     void registerDefaultCommands(Map<String, Class<? extends Command>> commands) {
         commands.put("fileprofiles", FileProfilesCommand.class);
-        commands.put("config", ConfigCommand.class);
+        commands.put("add-profile", AddProfileCommand.class);
         commands.put("create-job", CreateJobCommand.class);
         commands.put("jobs", ShowJobsCommand.class);
         commands.put("workflow", ShowWorkflowCommand.class);

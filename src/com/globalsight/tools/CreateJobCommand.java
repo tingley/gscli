@@ -168,7 +168,7 @@ public class CreateJobCommand extends WebServiceCommand {
 
     @Override
     public Options getOptions() {
-        Options opts = getDefaultOptions();
+        Options opts = super.getOptions();
         opts.addOption(TARGET_OPT);
         opts.addOption(FILEPROFILE_OPT);
         opts.addOption(FILEPROFILEID_OPT);
