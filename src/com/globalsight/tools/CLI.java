@@ -17,9 +17,6 @@ public class CLI {
     private SortedMap<String, Class<? extends Command>> commands =
         new TreeMap<String, Class<? extends Command>>();
     
-    //     public static final String GS_URL = "http://globalsightsaas.com/globalsight/services/AmbassadorWebService";
-    
-
     public void run(String[] args) {
         registerDefaultCommands(commands);
         if (args.length == 0) {

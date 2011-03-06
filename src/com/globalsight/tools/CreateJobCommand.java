@@ -58,7 +58,6 @@ public class CreateJobCommand extends WebServiceCommand {
             // Try to infer file profile from file extension
             List<FileProfile> possibleProfiles = new ArrayList<FileProfile>();
             for (File f : files) {
-                String ext = getFileExtension(f);
                 possibleProfiles.addAll(findByExtension(
                     webService.getFileProfiles(), 
                     getFileExtension(f)));
@@ -164,7 +163,7 @@ public class CreateJobCommand extends WebServiceCommand {
                     break;
                 }
                 bytesRemaining -= count;
-                verbose("Uploading chunk 1: " + size + " bytes");
+                verbose("Uploading chunk: " + size + " bytes");
                 webService.uploadFile(filePath, jobName, fileProfile.getId(), bytes);
             }
             verbose("Finished uploading " + filePath);
@@ -234,8 +233,7 @@ public class CreateJobCommand extends WebServiceCommand {
     
     @Override
     public String getDescription() {
-        // TODO Auto-generated method stub
-        return null;
+        return "create a job in GlobalSight";
     }
 
     @Override
