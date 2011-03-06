@@ -236,9 +236,4 @@ public class CreateJobCommand extends WebServiceCommand {
         return "create a job in GlobalSight";
     }
 
-    @Override
-    public String getName() {
-        return "create-job";
-    }
-
 }

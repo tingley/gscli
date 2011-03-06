@@ -11,7 +11,15 @@ import org.apache.commons.cli.HelpFormatter;
 @SuppressWarnings("static-access")
 public abstract class Command {
 
-    public abstract String getName();
+    private String name;
+    
+    String getName() {
+        return name;
+    }
+    
+    void setName(String name) {
+        this.name = name;
+    }
     
     public abstract String getDescription();
     

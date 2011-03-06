@@ -30,10 +30,4 @@ public class ShowWorkflowCommand extends WebServiceCommand {
 		return null;
 	}
 
-	@Override
-	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

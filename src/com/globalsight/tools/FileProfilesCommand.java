@@ -15,11 +15,6 @@ import org.apache.commons.cli.Option;
 public class FileProfilesCommand extends WebServiceCommand {
 
     @Override
-    public String getName() {
-        return "fileprofiles";
-    }
-
-    @Override
     public void usage() {
         // TODO Auto-generated method stub
 

@@ -16,11 +16,6 @@ public class AddProfileCommand extends Command {
         return null;
     }
 
-    @Override
-    public String getName() {
-        return "config";
-    }
-
     static final String URL = "url",
                         USERNAME = "username",
                         PASSWORD = "password",

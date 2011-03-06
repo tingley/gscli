@@ -11,11 +11,6 @@ public class SetDefaultProfileCommand extends Command {
         return "sets the default profile";
     }
 
-    @Override
-    public String getName() {
-        return "set-default-profile";
-    }
-
     @SuppressWarnings("unchecked")
     @Override
     public void handle(CommandLine command, UserData userData) throws Exception {

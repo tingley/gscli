@@ -27,6 +27,7 @@ public class CLI {
             help(args[1]);
         }
         Command command = getCommand(commands.get(cmd));
+        command.setName(cmd);
         if (command == null) {
             help();
         }

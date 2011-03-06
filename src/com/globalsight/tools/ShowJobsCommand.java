@@ -27,10 +27,4 @@ public class ShowJobsCommand extends WebServiceCommand {
     public String getDescription() {
         return "List jobs for this company";
     }
-
-    @Override
-    public String getName() {
-        return "jobs";
-    }
-
 }
