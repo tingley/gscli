@@ -32,15 +32,12 @@ public class CreateJobCommand extends WebServiceCommand {
             die("Must specify at least one file to import.");
         }
         
+        List<File> files = getFileList(command);
+        
         if (command.hasOption(FILEPROFILE) && 
             command.hasOption(FILEPROFILEID)) {
             usage("Can't specify both " + FILEPROFILE + 
                   " and " + FILEPROFILEID + " options.");
-        }
-        if (!(command.hasOption(FILEPROFILE) || 
-              command.hasOption(FILEPROFILEID))) {
-            usage("Must specify either " + FILEPROFILE +
-                  " or " + FILEPROFILEID + " option.");
         }
         FileProfile fp = null;
         if (command.hasOption(FILEPROFILE)) {
@@ -50,26 +47,34 @@ public class CreateJobCommand extends WebServiceCommand {
                 die("No such file profile: '" + fpName + "'");
             }
         }
-        else {
+        else if (command.hasOption(FILEPROFILEID)) {
             String fpId = command.getOptionValue(FILEPROFILEID);
             fp = findById(webService.getFileProfiles(), fpId);
             if (fp == null) {
                 die("No such file profile id: '" + fpId + "'");
             }
         }
+        else {
+            // Try to infer file profile from file extension
+            List<FileProfile> possibleProfiles = new ArrayList<FileProfile>();
+            for (File f : files) {
+                String ext = getFileExtension(f);
+                possibleProfiles.addAll(findByExtension(
+                    webService.getFileProfiles(), 
+                    getFileExtension(f)));
+            }
+            if (possibleProfiles.size() > 1) {
+                dieWithProfileList(possibleProfiles);
+            }
+            else if (possibleProfiles.size() == 0) {
+                die("No matching file profile for file extension");
+            }
+            fp = possibleProfiles.get(0);
+            verbose("Guessing file profile: " + fp.getName());
+        }
         
         // TODO target locale overrides
         
-        // Convert all remaining arguments to files
-        List<File> files = new ArrayList<File>();
-        for (String path : command.getArgs()) {
-            File f = new File(path);
-            if (!f.exists() || f.isDirectory()) {
-                die("Not a file: " + f);
-            }
-            files.add(f.getCanonicalFile());
-        }
-
         // Get a job name either from command line or first file
         // uploaded, then uniquify
         String baseJobName = files.get(0).getName();
@@ -84,7 +89,29 @@ public class CreateJobCommand extends WebServiceCommand {
         }
         webService.createJob(jobName, filePaths, fp);
     }
-    
+
+    List<File> getFileList(CommandLine command) throws IOException {
+        // Convert all remaining arguments to files
+        List<File> files = new ArrayList<File>();
+        for (String path : command.getArgs()) {
+            File f = new File(path);
+            if (!f.exists() || f.isDirectory()) {
+                die("Not a file: " + f);
+            }
+            files.add(f.getCanonicalFile());
+        }
+        return files;
+    }
+
+    String getFileExtension(File file) {
+        String basename = file.getName();
+        int i = basename.lastIndexOf('.');
+        if (i == -1 || i + 1 >= basename.length()) {
+            return "";
+        }
+        return basename.substring(i + 1, basename.length());
+    }
+
     FileProfile findByName(List<FileProfile> fileProfiles, String name) {
         for (FileProfile fp : fileProfiles) {
             if (fp.getName().equalsIgnoreCase(name)) {
@@ -101,6 +128,18 @@ public class CreateJobCommand extends WebServiceCommand {
             }
         }
         return null;
+    }
+    
+    List<FileProfile> findByExtension(List<FileProfile> fileProfiles, 
+                                      String fileExtension) {
+        List<FileProfile> fps = new ArrayList<FileProfile>();
+        fileExtension = fileExtension.toLowerCase();
+        for (FileProfile fp : fileProfiles) {
+            if (fp.getFileExtensions().contains(fileExtension)) {
+                fps.add(fp);
+            }
+        }
+        return fps;
     }
     
     private static long MAX_SEND_SIZE = 5 * 1000 * 1024; // 5M
@@ -139,6 +178,23 @@ public class CreateJobCommand extends WebServiceCommand {
             }
         }
         return filePath;
+    }
+    
+    void dieWithProfileList(List<FileProfile> profiles) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Can't guess file profile, multiple matches: [");
+        boolean first = true;
+        for (FileProfile fp : profiles) {
+            if (first) {
+                first = false;
+            }
+            else {
+                sb.append(", ");
+            }
+            sb.append(fp.getName());
+        }
+        sb.append("]");
+        die(sb.toString());
     }
     
     static final String TARGET = "target",
