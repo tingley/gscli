@@ -46,17 +46,16 @@ public abstract class WebServiceCommand extends Command {
         // XXX Ugly
         // TODO: also, lazily calculate this -- right now we always do it
         // even if the command dies immediately
-        // TODO: auth token needs to be stored per-profile
-        String token = getAuthToken(userData);
+        String token = getAuthToken(userData, profile);
         try {
-            execWithAuth(ws, userData, command, token);
+            execWithAuth(ws, userData, command, token, profile);
         }
         catch (RemoteException e) {
             ErrorParser parser = new ErrorParser();
             Error error = parser.parse(e.getMessage());
             if (error instanceof InvalidTokenError) {
                 try {
-                    execWithAuth(ws, userData, command, null);
+                    execWithAuth(ws, userData, command, null, profile);
                 }
                 catch (RemoteException e2) {
                     dieWithError(parser.parse(e2.getMessage()));
@@ -83,11 +82,14 @@ public abstract class WebServiceCommand extends Command {
     }
     
     void execWithAuth(WebService ws, UserData userData, CommandLine command,
-                      String token) throws Exception {
+                      String token, Profile profile) throws Exception {
         if (token == null) {
             token = authorize(ws, userData);
             verbose("Received token " + token);
-            userData.setSession(new Session(token));
+            // Update Session cache
+            Sessions sessions = userData.getSessions();
+            sessions.setSession(profile.getProfileName(), token);
+            userData.setSessions(sessions);
         }
         else {
             verbose("Using cached auth token " + token);
@@ -121,8 +123,15 @@ public abstract class WebServiceCommand extends Command {
         return ws.login(username, password);
     }
     
-    protected String getAuthToken(UserData userData) throws Exception {
-        Session session = userData.getSession();
+    protected String getAuthToken(UserData userData, Profile profile) throws Exception {
+        if (profile == null) {
+            return null;
+        }
+        Sessions sessions = userData.getSessions();
+        Session session = sessions.getSession(profile.getProfileName());
+        if (session == null) {
+            return null;
+        }
         // XXX Is this the right place to validate the timestamp?
         String token = session.getToken();
         if (token == null) {

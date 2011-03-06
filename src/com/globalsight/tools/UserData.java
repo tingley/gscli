@@ -65,12 +65,12 @@ public class UserData {
         store("profiles", profiles);
     }
     
-    public void setSession(Session session) { 
-        store("session", session);
+    public void setSessions(Sessions sessions) { 
+        store("sessions", sessions);
     }
     
-    public Session getSession() {
-        return new Session(select("session"));
+    public Sessions getSessions() {
+        return new Sessions(select("sessions"));
     }
     
     private String key(String p, String rest) {
