@@ -68,6 +68,10 @@ public class Profiles implements UserDataComponent {
         return defaultProfile;
     }
     
+    public void setDefaultProfile(Profile profile) {
+        defaultProfile = profile;
+    }
+    
     public Collection<Profile> getAllProfiles() {
         return profiles.values();
     }
