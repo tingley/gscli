@@ -27,10 +27,10 @@ public class CLI {
             help(args[1]);
         }
         Command command = getCommand(commands.get(cmd));
-        command.setName(cmd);
         if (command == null) {
             help();
         }
+        command.setName(cmd);
         if (args.length > 1) {
             args = Arrays.asList(args).subList(1, args.length)
                                 .toArray(new String[args.length - 1]);
