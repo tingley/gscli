@@ -50,6 +50,7 @@ public class AddProfileCommand extends Command {
         options.addOption(URL_OPT);
         options.addOption(USER_OPT);
         options.addOption(PASSWORD_OPT);
+        options.addOption(PROFILENAME_OPT);
         return options;
     }
     
