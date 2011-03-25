@@ -34,6 +34,20 @@ public class CreateJobCommand extends WebServiceCommand {
         
         List<File> files = getFileList(command);
         
+        int count = 1;
+        if (command.hasOption(REPEAT)) {
+            String v = command.getOptionValue(REPEAT);
+            try {
+                count = Integer.valueOf(v);
+                if (count <= 0) {
+                    die(REPEAT + " option value must be >= 1");
+                }
+            }
+            catch (NumberFormatException e) {
+                die(REPEAT + " option requires a numeric argument");
+            }
+        }
+        
         if (command.hasOption(FILEPROFILE) && 
             command.hasOption(FILEPROFILEID)) {
             usage("Can't specify both " + FILEPROFILE + 
@@ -74,19 +88,24 @@ public class CreateJobCommand extends WebServiceCommand {
         
         // TODO target locale overrides
         
-        // Get a job name either from command line or first file
-        // uploaded, then uniquify
-        String baseJobName = files.get(0).getName();
-        if (command.hasOption(JOBNAME)) {
-            command.getOptionValue(JOBNAME);
+        if (count > 1) {
+            verbose("Creating " + count + " jobs:");
         }
-        String jobName = webService.getUniqueJobName(baseJobName);
-        verbose("Got unique job name: " + jobName);
-        List<String> filePaths = new ArrayList<String>();
-        for (File f : files) {
-            filePaths.add(uploadFile(f, jobName, fp, webService));
+        for (int i = 0; i < count; i++) {
+            // Get a job name either from command line or first file
+            // uploaded, then uniquify
+            String baseJobName = files.get(0).getName();
+            if (command.hasOption(JOBNAME)) {
+                baseJobName = command.getOptionValue(JOBNAME);
+            }
+            String jobName = webService.getUniqueJobName(baseJobName);
+            verbose("Got unique job name: " + jobName);
+            List<String> filePaths = new ArrayList<String>();
+            for (File f : files) {
+                filePaths.add(uploadFile(f, jobName, fp, webService));
+            }
+            webService.createJob(jobName, filePaths, fp);
         }
-        webService.createJob(jobName, filePaths, fp);
     }
 
     List<File> getFileList(CommandLine command) throws IOException {
@@ -199,7 +218,8 @@ public class CreateJobCommand extends WebServiceCommand {
     static final String TARGET = "target",
                         FILEPROFILE = "fileprofile",
                         FILEPROFILEID = "fileprofileid",
-                        JOBNAME = "name";
+                        JOBNAME = "name",
+                        REPEAT = "repeat";
     static final Option TARGET_OPT = OptionBuilder
         .withArgName("targetLocale")
         .hasArg()
@@ -220,6 +240,11 @@ public class CreateJobCommand extends WebServiceCommand {
         .hasArg()
         .withDescription("job name")
         .create(JOBNAME);
+    static final Option REPEAT_OPT = OptionBuilder
+        .withArgName("repeat")
+        .hasArg()
+        .withDescription("create this job <n> times")
+        .create(REPEAT);
 
     @Override
     public Options getOptions() {
@@ -228,6 +253,7 @@ public class CreateJobCommand extends WebServiceCommand {
         opts.addOption(FILEPROFILE_OPT);
         opts.addOption(FILEPROFILEID_OPT);
         opts.addOption(JOBNAME_OPT);
+        opts.addOption(REPEAT_OPT);
         return opts;
     }
     
