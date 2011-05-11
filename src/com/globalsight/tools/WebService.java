@@ -2,6 +2,7 @@ package com.globalsight.tools;
 
 import java.net.URL;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -151,19 +152,21 @@ CompletionDate>
     public void createJob(String jobName, List<String> filePaths,
                 FileProfile fileProfile) throws RemoteException {
          getService().createJob(getToken(), jobName, "", 
-                 serializeStrings(filePaths), fileProfile.getId(),
-                 serializeStrings(fileProfile.getTargetLocales()));
+                 join('|', filePaths),
+                 join('|', repeat(filePaths.size(), fileProfile.getId())),
+                 join('|', repeat(filePaths.size(),
+                                  join(',', fileProfile.getTargetLocales()))));
          /* For reference, this is the minimal attr xml
          <?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<attributes/>
          */
     }
 
-    private String serializeStrings(Collection<String> strings) {
+    private String join(char ch, Collection<String> strings) {
         StringBuilder sb = new StringBuilder();
         boolean first = true;
         for (String s : strings) {
             if (!first) {
-                sb.append('|');
+                sb.append(ch);
             }
             else {
                 first = false;
@@ -171,6 +174,14 @@ CompletionDate>
             sb.append(s);
         }
         return sb.toString();
+    }
+
+    private <T> List<T> repeat(int n, T elem) {
+        ArrayList<T> r = new ArrayList<T>(n);
+        for (int i=0; i<n; i++) {
+            r.add(elem);
+        }
+        return r;
     }
     
     protected Ambassador getService() {
