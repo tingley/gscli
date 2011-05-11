@@ -93,6 +93,7 @@ public class CLI {
         commands.put("jobs", ShowJobsCommand.class);
         commands.put("workflow", ShowWorkflowCommand.class);
         commands.put("set-default-profile", SetDefaultProfileCommand.class);
+        commands.put("accept-task", AcceptTaskCommand.class);
     }
     
     private static Command getCommand(Class<? extends Command> clazz) {

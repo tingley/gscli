@@ -63,6 +63,13 @@ public class WebService {
         }
     }
     
+    public boolean acceptTask(long taskId) throws RemoteException {
+        String xml = 
+            getService().acceptTask(getToken(), Long.toString(taskId));
+        System.out.println(xml);
+        return true;
+    }
+    
     // Argument to this needs to be a WFId from a job
     public String getWorkflow(Long id) throws RemoteException {
     	String taskXml = 

@@ -11,14 +11,14 @@ public class ShowWorkflowCommand extends WebServiceCommand {
 			WebService webService) throws Exception {
 		String[] args = command.getArgs();
 		if (args.length != 1) {
-			usage("workflow [wfid]");
+			usage(getName() + " [wfid]");
 		}
 		Long id = null;
 		try {
 			id = Long.valueOf(args[0]);
 		}
 		catch (Exception e) {
-			usage("workflow [wfid]");
+		    usage(getName() + " [wfid]");
 		}
 		String xml = webService.getWorkflow(id);
 		System.out.println(xml);
