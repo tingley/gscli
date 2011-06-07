@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
@@ -86,7 +88,12 @@ public class CreateJobCommand extends WebServiceCommand {
             verbose("Guessing file profile: " + fp.getName());
         }
         
-        // TODO target locale overrides
+        Collection<String> targetLocales = null;
+        if (command.hasOption(TARGET)) {
+            targetLocales = Arrays.asList(command.getOptionValues(TARGET));
+        } else {
+            targetLocales = fp.getTargetLocales();
+        }
         
         if (count > 1) {
             verbose("Creating " + count + " jobs:");
@@ -104,7 +111,7 @@ public class CreateJobCommand extends WebServiceCommand {
             for (File f : files) {
                 filePaths.add(uploadFile(f, jobName, fp, webService));
             }
-            webService.createJob(jobName, filePaths, fp);
+            webService.createJob(jobName, filePaths, fp, targetLocales);
         }
     }
 
@@ -215,7 +222,7 @@ public class CreateJobCommand extends WebServiceCommand {
         die(sb.toString());
     }
     
-    static final String TARGET = "target",
+    static final String TARGET = "targetlocale",
                         FILEPROFILE = "fileprofile",
                         FILEPROFILEID = "fileprofileid",
                         JOBNAME = "name",

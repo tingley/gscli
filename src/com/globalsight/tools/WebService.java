@@ -157,12 +157,13 @@ CompletionDate>
      * file profile.
      */
     public void createJob(String jobName, List<String> filePaths,
-                FileProfile fileProfile) throws RemoteException {
+                FileProfile fileProfile, Collection<String> targetLocales)
+                throws RemoteException {
          getService().createJob(getToken(), jobName, "", 
                  join('|', filePaths),
                  join('|', repeat(filePaths.size(), fileProfile.getId())),
                  join('|', repeat(filePaths.size(),
-                                  join(',', fileProfile.getTargetLocales()))));
+                                  join(',', targetLocales))));
          /* For reference, this is the minimal attr xml
          <?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<attributes/>
          */
