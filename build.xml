@@ -47,6 +47,7 @@
            deprecation="on"
            fork="yes"
            memoryMaximumSize="256m"
+           includeantruntime="false"
            encoding="UTF-8"
            source="1.6"
            target="1.6" >
@@ -61,6 +62,7 @@
            deprecation="on"
            fork="yes"
            memoryMaximumSize="256m"
+           includeantruntime="false"
            encoding="UTF-8"
            source="1.6"
            target="1.6" >
