@@ -71,6 +71,20 @@ public class WebService {
         return true;
     }
     
+    public Task getCurrentTask(Workflow workflow) throws RemoteException {
+    	try {
+    		String taskXml = getService().getCurrentTasksInWorkflow(
+    					getToken(), workflow.getId());
+    		return new TaskParser(factory).parse(taskXml);
+    	}
+        catch (XMLStreamException e) {
+            throw new RuntimeException(e);
+        }
+        catch (SNAXUserException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
     // Argument to this needs to be a WFId from a job
     public String getWorkflow(Long id) throws RemoteException {
     	String taskXml = 

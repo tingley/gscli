@@ -126,7 +126,8 @@ public class JobsParser {
         public void endElement(EndElement element, JobData data)
                 throws SNAXUserException {
             if (data.wfId != null && data.wfTgtLocale != null) {
-                data.current.addWorkflow(data.wfId, data.wfTgtLocale);
+                data.current.addWorkflow(parseLong(data.wfId), 
+                						 data.wfTgtLocale);
             }
             else {
                 throw new SNAXUserException("Invalid workflow for job " + 
@@ -193,5 +194,14 @@ public class JobsParser {
                 data.wfTgtLocale = contents.getData();
             }
         }
+    }
+    
+    private static long parseLong(String s) throws SNAXUserException {
+    	try {
+    		return Long.valueOf(s);
+    	}
+    	catch (NumberFormatException e) {
+    		throw new SNAXUserException(e);
+    	}
     }
 }
