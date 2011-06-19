@@ -38,10 +38,13 @@ ARGLOOP:
                 return;
             }
             for (Job j : jobsToShow) {
-                // XXX Only doing the first workflow
-                Task t = webService.getCurrentTask(j.getWorkflows().get(0));
-                System.out.println("Job " + j.getId() + ", task " + t.getId() +
-                                ", " + t.getName() + " -- " + t.getState());
+                System.out.println("Job " + j.getId() + ": " + j.getName());
+                for (Workflow f : j.getWorkflows()) {
+                    Task t = webService.getCurrentTask(f);
+                    System.out.println("\t" + f.getTargetLocale() + 
+                                " - Task " + t.getId() + " " + t.getName() 
+                                + " " + t.getState());
+                }
             }
         }
     }
