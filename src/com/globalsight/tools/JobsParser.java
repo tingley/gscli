@@ -16,12 +16,6 @@ import net.sundell.snax.NodeModelBuilder;
 import net.sundell.snax.SNAXParser;
 import net.sundell.snax.SNAXUserException;
 
-import com.globalsight.tools.FileProfilesParser.AttrHandler;
-import com.globalsight.tools.FileProfilesParser.FP;
-import com.globalsight.tools.FileProfilesParser.FPHandler;
-import com.globalsight.tools.FileProfilesParser.FileExtensionHandler;
-import com.globalsight.tools.FileProfilesParser.LocaleHandler;
-
 public class JobsParser {
    
     private XMLInputFactory factory;
