@@ -9,10 +9,35 @@ public class Job {
     private List<SourcePage> sourcePages = new ArrayList<SourcePage>();
     private List<Workflow> workflows = new ArrayList<Workflow>();
 
+    /** 
+     * Try to find a job, either by id (if numeric) or by name.
+     * (Yes, false matches are possible with numeric job names.)
+     * @param jobs
+     * @param ref
+     * @return
+     */
+    public static Job find(List<Job> jobs, String ref) {
+        if (parseLong(ref) != null) {
+            return byId(jobs, ref);
+        }
+        else {
+            return byName(jobs, ref);
+        }
+    }
+            
     // TODO: jobs need numeric ids
     public static Job byId(List<Job> jobs, String id) {
         for (Job j : jobs) {
             if (j.getId().equals(id)) {
+                return j;
+            }
+        }
+        return null;
+    }
+    
+    public static Job byName(List<Job> jobs, String name) {
+        for (Job j : jobs) {
+            if (j.getName().equals(name)) {
                 return j;
             }
         }
@@ -123,4 +148,14 @@ public class Job {
 
         private String id, externalPageId;
     }
+    
+    private static Long parseLong(String s) {
+        try {
+            return Long.valueOf(s);
+        }
+        catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
 }

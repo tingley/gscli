@@ -20,14 +20,9 @@ public class ShowJobsCommand extends WebServiceCommand {
         else {
             List<Job> jobsToShow = new ArrayList<Job>();
             for (String arg: args) {
-                Long id = parseId(arg);
-                if (id == null) {
-                    System.out.println("Skipping '" + arg + "': not an id");
-                    continue;
-                }
-                Job j = Job.byId(jobs, arg);
-                if (j != null) {
-                    jobsToShow.add(j);
+                Job job = Job.find(jobs, arg);
+                if (job != null) {
+                    jobsToShow.add(job);
                     continue;
                 }
                 System.out.println("Skipping '" + arg + "': no such job");
@@ -47,15 +42,6 @@ public class ShowJobsCommand extends WebServiceCommand {
         }
     }
     
-    private Long parseId(String s) {
-        try {
-            return Long.valueOf(s);
-        }
-        catch (NumberFormatException e) {
-            return null;
-        }
-    }
-
     void showAllJobs(List<Job> jobs) throws Exception {
         printHeader();
         for (Job job : jobs) {

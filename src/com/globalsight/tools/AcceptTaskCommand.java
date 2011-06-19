@@ -28,11 +28,7 @@ class AcceptTaskCommand extends WebServiceCommand {
         // If there are spare arguments, they are interpreted 
         // as target locales
         String arg = command.getOptionValue(JOB);
-        // Not currently required, just a sanity check
-        if (parseLong(arg) == null) {
-            usage("Argument to '-'" + JOB + " must be a job id");
-        }
-        Job job = Job.byId(webService.getJobs(), arg);
+        Job job = Job.find(webService.getJobs(), arg);
         if (job == null) {
             usage("No such job: " + arg);
         }
@@ -83,9 +79,9 @@ class AcceptTaskCommand extends WebServiceCommand {
     static final String JOB = "job";
     @SuppressWarnings("static-access")
     static final Option JOB_OPT = OptionBuilder
-        .withArgName("jobId")
+        .withArgName("jobId/jobName")
         .hasArg()
-        .withDescription("job id - accept tasks from this job")
+        .withDescription("job id - accept tasks from this job (by name or id)")
         .create(JOB);
 
     @Override
