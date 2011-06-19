@@ -9,6 +9,16 @@ public class Job {
     private List<SourcePage> sourcePages = new ArrayList<SourcePage>();
     private List<Workflow> workflows = new ArrayList<Workflow>();
 
+    // TODO: jobs need numeric ids
+    public static Job byId(List<Job> jobs, String id) {
+        for (Job j : jobs) {
+            if (j.getId().equals(id)) {
+                return j;
+            }
+        }
+        return null;
+    }
+    
     public String getId() {
         return id;
     }
@@ -85,7 +95,7 @@ public class Job {
         sourcePages.add(new SourcePage(id, externalPageId));
     }
     
-    public void addWorkflow(String id, String targetLocale) {
+    public void addWorkflow(long id, String targetLocale) {
         workflows.add(new Workflow(id, targetLocale));
     }
     
@@ -112,30 +122,5 @@ public class Job {
         }
 
         private String id, externalPageId;
-    }
-    
-    static class Workflow {
-        private String id, targetLocale;
-        
-        Workflow(String id, String targetLocale) {
-            this.id = id;
-            this.targetLocale = targetLocale;
-        }
-        
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public String getTargetLocale() {
-            return targetLocale;
-        }
-
-        public void setTargetLocale(String targetLocale) {
-            this.targetLocale = targetLocale;
-        }
     }
 }

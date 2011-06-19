@@ -26,8 +26,8 @@ public class TestJobsParser {
                    Arrays.asList(new Job.SourcePage[] {
                        new Job.SourcePage("1000", "en_US/webservice/simple.html_312089757/src/gscli/simple.html")
                    }),
-                   Arrays.asList(new Job.Workflow[] {
-                       new Job.Workflow("1", "fr_FR")
+                   Arrays.asList(new Workflow[] {
+                       new Workflow(1, "fr_FR")
                    })
             );
             expect(jobs.get(1), "1001", "simple.html_811636338", "EXPORTED",
@@ -35,8 +35,8 @@ public class TestJobsParser {
                     Arrays.asList(new Job.SourcePage[] {
                         new Job.SourcePage("1001", "en_US/webservice/simple.html_811636338/src/gscli/simple.html")
                     }),
-                    Arrays.asList(new Job.Workflow[] {
-                        new Job.Workflow("2", "fr_FR")
+                    Arrays.asList(new Workflow[] {
+                        new Workflow(2, "fr_FR")
                     })
              );
         }
@@ -48,7 +48,7 @@ public class TestJobsParser {
 
     void expect(Job job, String id, String name, String state, String displayState,
                 String priority, String wordCount, String sourceLang, String dueDate,
-                List<Job.SourcePage> sourcePages, List<Job.Workflow> workflows) {
+                List<Job.SourcePage> sourcePages, List<Workflow> workflows) {
         assertEquals("Error with job " + job.getId(),id, job.getId());
         assertEquals("Error with job " + job.getId(),name, job.getName());
         assertEquals("Error with job " + job.getId(),state, job.getState());

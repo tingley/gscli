@@ -49,6 +49,7 @@
            memoryMaximumSize="256m"
            includeantruntime="false"
            encoding="UTF-8"
+           includeantruntime="false"
            source="1.6"
            target="1.6" >
       <classpath refid="project.class.path"/>
@@ -64,6 +65,7 @@
            memoryMaximumSize="256m"
            includeantruntime="false"
            encoding="UTF-8"
+           includeantruntime="false"
            source="1.6"
            target="1.6" >
       <classpath refid="project.class.path"/>
@@ -83,6 +85,7 @@
            fork="yes"
            memoryMaximumSize="256m"
            encoding="UTF-8"
+           includeantruntime="false"
            source="1.6"
            target="1.6" >
       <classpath refid="test.class.path"/>
