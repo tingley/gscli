@@ -1,7 +1,5 @@
 package com.globalsight.tools;
 
-import java.util.List;
-
 import org.apache.commons.cli.CommandLine;
 
 public class ShowWorkflowCommand extends WebServiceCommand {
@@ -26,8 +24,7 @@ public class ShowWorkflowCommand extends WebServiceCommand {
 
     @Override
     public String getDescription() {
-        // TODO Auto-generated method stub
-        return null;
+        return "DEBUG: dump webservice workflow xml";
     }
 
 }

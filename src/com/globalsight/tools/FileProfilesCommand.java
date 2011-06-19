@@ -3,8 +3,6 @@ package com.globalsight.tools;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.stream.XMLInputFactory;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
@@ -15,15 +13,8 @@ import org.apache.commons.cli.Option;
 public class FileProfilesCommand extends WebServiceCommand {
 
     @Override
-    public void usage() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public String getDescription() {
-        // TODO Auto-generated method stub
-        return null;
+        return "show available file profiles";
     }
 
     @Override

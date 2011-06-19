@@ -7,13 +7,12 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 
-// Usage: add-profile --url=[..] --username=[...] --password=[..]
+// Usage: add-profile -url=[..] -username=[...] -password=[..]
 @SuppressWarnings("static-access")
 public class AddProfileCommand extends Command {
     @Override
     public String getDescription() {
-        // TODO Auto-generated method stub
-        return null;
+        return "store a profile for a GlobalSight server"; 
     }
 
     static final String URL = "url",
