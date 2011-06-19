@@ -12,9 +12,9 @@ public class ShowJobsCommand extends WebServiceCommand {
     @Override
     protected void execute(CommandLine command, UserData userData,
         WebService webService) throws Exception {
-        List<String> args = command.getArgList();
+        String[] args = command.getArgs();
         List<Job> jobs = webService.getJobs();
-        if (args.size() == 0) {
+        if (args.length == 0) {
             showAllJobs(jobs);
         }
         else {
