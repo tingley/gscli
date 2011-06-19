@@ -19,18 +19,16 @@ public class ShowJobsCommand extends WebServiceCommand {
         }
         else {
             List<Job> jobsToShow = new ArrayList<Job>();
-ARGLOOP:    
             for (String arg: args) {
                 Long id = parseId(arg);
                 if (id == null) {
                     System.out.println("Skipping '" + arg + "': not an id");
                     continue;
                 }
-                for (Job j : jobs) {
-                    if (j.getId().equals(arg)) { // TODO: jobs need numeric IDs
-                        jobsToShow.add(j);
-                        continue ARGLOOP;
-                    }
+                Job j = Job.byId(jobs, arg);
+                if (j != null) {
+                    jobsToShow.add(j);
+                    continue;
                 }
                 System.out.println("Skipping '" + arg + "': no such job");
             }

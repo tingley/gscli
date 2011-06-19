@@ -9,6 +9,16 @@ public class Job {
     private List<SourcePage> sourcePages = new ArrayList<SourcePage>();
     private List<Workflow> workflows = new ArrayList<Workflow>();
 
+    // TODO: jobs need numeric ids
+    public static Job byId(List<Job> jobs, String id) {
+        for (Job j : jobs) {
+            if (j.getId().equals(id)) {
+                return j;
+            }
+        }
+        return null;
+    }
+    
     public String getId() {
         return id;
     }
