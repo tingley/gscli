@@ -72,11 +72,11 @@ public class WebService {
     }
     
     public Task getCurrentTask(Workflow workflow) throws RemoteException {
-    	try {
-    		String taskXml = getService().getCurrentTasksInWorkflow(
-    					getToken(), workflow.getId());
-    		return new TaskParser(factory).parse(taskXml);
-    	}
+        try {
+            String taskXml = getService().getCurrentTasksInWorkflow(
+                    getToken(), workflow.getId());
+            return new TaskParser(factory).parse(taskXml);
+        }
         catch (XMLStreamException e) {
             throw new RuntimeException(e);
         }
@@ -87,10 +87,10 @@ public class WebService {
     
     // Argument to this needs to be a WFId from a job
     public String getWorkflow(Long id) throws RemoteException {
-    	String taskXml = 
-    		getService().getCurrentTasksInWorkflow(getToken(), id);
-    	System.out.println(taskXml);
-    	/* Task XML
+        String taskXml = 
+            getService().getCurrentTasksInWorkflow(getToken(), id);
+        System.out.println(taskXml);
+        /* Task XML
  <?xml version="1.0" encoding="UTF-8" ?>
   <tasksInWorkflow>
     <workflowId>9</workflowId>

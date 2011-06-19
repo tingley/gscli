@@ -197,11 +197,11 @@ public class JobsParser {
     }
     
     private static long parseLong(String s) throws SNAXUserException {
-    	try {
-    		return Long.valueOf(s);
-    	}
-    	catch (NumberFormatException e) {
-    		throw new SNAXUserException(e);
-    	}
+        try {
+            return Long.valueOf(s);
+        }
+        catch (NumberFormatException e) {
+            throw new SNAXUserException(e);
+        }
     }
 }

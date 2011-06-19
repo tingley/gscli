@@ -65,8 +65,8 @@ ARGLOOP:
         }
     }
     void printHeader() {
-    	Formatter f = new Formatter(System.out);
-    	f.format("%-8s%-8s%-12s%s\n", "ID", "WFID", "State", "Name");
+        Formatter f = new Formatter(System.out);
+        f.format("%-8s%-8s%-12s%s\n", "ID", "WFID", "State", "Name");
     }
     void printShort(Job job) {
         Formatter f = new Formatter(System.out);

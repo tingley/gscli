@@ -14,12 +14,12 @@ import net.sundell.snax.SNAXParser;
 import net.sundell.snax.SNAXUserException;
 
 public class TaskParser {
-	private XMLInputFactory factory;
-	    
+    private XMLInputFactory factory;
+
     TaskParser(XMLInputFactory factory) {
-    	this.factory = factory;
-	}
-    
+        this.factory = factory;
+    }
+
     /*** 
      * Can this actually produce multiple tasks?  I've never seen it..
      */
@@ -27,37 +27,37 @@ public class TaskParser {
         elements("tasksInWorkflow", "workflowId")
             .attach(new WFIDHandler());
         elements("tasksInWorkflow", "task").child()
-        	.attach(new TaskAttrHandler());
+            .attach(new TaskAttrHandler());
     }}.build();
-    
+
     // TODO: need a way to get the workflow
     public Task parse(String workflowTaskXml) 
-    		throws SNAXUserException, XMLStreamException {
-		SNAXParser<WFT> parser = SNAXParser.createParser(factory, MODEL);
-		WFT wft = new WFT();
-		parser.parse(new StringReader(workflowTaskXml), wft);
-		return wft.toTask();
-	}
-    
+        throws SNAXUserException, XMLStreamException {
+            SNAXParser<WFT> parser = SNAXParser.createParser(factory, MODEL);
+            WFT wft = new WFT();
+            parser.parse(new StringReader(workflowTaskXml), wft);
+            return wft.toTask();
+        }
+
     static class WFT {
-    	long id;
-    	long wfId;
-    	String name;
-    	String state;
-    	
-    	Task toTask() {
-    		return new Task(wfId, id, name, state);
-    	}
+        long id;
+        long wfId;
+        String name;
+        String state;
+
+        Task toTask() {
+            return new Task(wfId, id, name, state);
+        }
     }
-    
+
     static class WFIDHandler extends DefaultElementHandler<WFT> {
-    	@Override
+        @Override
         public void characters(StartElement parent, Characters contents,
-        					   WFT data) throws SNAXUserException {
-			data.wfId = parseLong(contents.getData()); 
-    	}
+                WFT data) throws SNAXUserException {
+            data.wfId = parseLong(contents.getData()); 
+        }
     }
-    
+
     static class TaskAttrHandler extends DefaultElementHandler<WFT> {
         @Override
         public void characters(StartElement parent, Characters contents, 
@@ -67,20 +67,20 @@ public class TaskParser {
                 data.id = parseLong(contents.getData());
             }
             else if (el.equals("name")) {
-            	data.name = contents.getData();
+                data.name = contents.getData();
             }
             else if (el.equals("state")) {
-            	data.state = contents.getData();
+                data.state = contents.getData();
             }
         }
     }
-    
+
     private static long parseLong(String s) throws SNAXUserException {
-    	try {
-			return Long.valueOf(s); 
-		}
-		catch (NumberFormatException e) {
-			throw new SNAXUserException(e);
-		}
+        try {
+            return Long.valueOf(s); 
+        }
+        catch (NumberFormatException e) {
+            throw new SNAXUserException(e);
+        }
     }
 }
