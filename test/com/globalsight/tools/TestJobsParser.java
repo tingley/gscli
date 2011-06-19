@@ -5,8 +5,6 @@ import static org.junit.Assert.fail;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import javax.xml.stream.XMLInputFactory;
 

@@ -11,8 +11,6 @@ import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 
 import net.sundell.snax.*;
-import net.sundell.snax.handlers.ListConsumer;
-import net.sundell.snax.handlers.ListHandler;
 
 /**
  * Parse the XML returned by a GlobalSight getFileProfilesEx 
