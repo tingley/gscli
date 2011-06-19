@@ -49,7 +49,7 @@ class AcceptTaskCommand extends WebServiceCommand {
                             throws Exception {
         String[] args = command.getArgs();
         if (args.length != 1) {
-            usage(getName() + " [taskId]");
+            usage();
         }
         Long id = parseLong(args[0]);
         if (id == null) {
@@ -65,6 +65,11 @@ class AcceptTaskCommand extends WebServiceCommand {
     }
 
     @Override
+    protected String getUsageLine() {
+        return super.getUsageLine() + " [task id], or use -" + JOB; 
+    }
+    
+    @Override
     public String getDescription() {
         return "Accept an available task by id";
     }
@@ -74,7 +79,7 @@ class AcceptTaskCommand extends WebServiceCommand {
     static final Option JOB_OPT = OptionBuilder
         .withArgName("jobId")
         .hasArg()
-        .withDescription("job id")
+        .withDescription("job id - accept tasks from this job")
         .create(JOB);
 
     @Override
