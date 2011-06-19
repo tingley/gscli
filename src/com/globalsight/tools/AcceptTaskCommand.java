@@ -48,27 +48,33 @@ class AcceptTaskCommand extends WebServiceCommand {
     private void acceptByTaskId(CommandLine command, WebService webService) 
                             throws Exception {
         String[] args = command.getArgs();
-        if (args.length != 1) {
+        if (args.length == 0) {
             usage();
         }
-        Long id = parseLong(args[0]);
-        if (id == null) {
-            usage(getName() + " [taskId]");
+        List<Long> ids = new ArrayList<Long>();
+        for (String arg : args) {
+            Long id = parseLong(arg);
+            if (id == null) {
+                usage("Not a task id: " + arg);
+            }
+            ids.add(id);
         }
-        if (webService.acceptTask(id)) {
-            System.out.println("Accepted task " + id);
-        }
-        else {
-            // TODO: get an error msg somehow
-            System.out.println("Failed to accept task " + id);
+        for (Long id : ids) {
+            if (webService.acceptTask(id)) {
+                System.out.println("Accepted task " + id);
+            }
+            else {
+                // TODO: get an error msg somehow
+                System.out.println("Failed to accept task " + id);
+            }
         }
     }
 
     @Override
     protected String getUsageLine() {
-        return super.getUsageLine() + " [task id], or use -" + JOB; 
+        return super.getUsageLine() + " [task ids], or use -" + JOB; 
     }
-    
+        
     @Override
     public String getDescription() {
         return "Accept an available task by id";

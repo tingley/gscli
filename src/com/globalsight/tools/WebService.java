@@ -67,8 +67,8 @@ public class WebService {
     public boolean acceptTask(long taskId) throws RemoteException {
         String xml = 
             getService().acceptTask(getToken(), Long.toString(taskId));
-        System.out.println(xml);
-        return true;
+        // XXX Wow, this sucks.
+        return "success".equals(xml);
     }
     
     public Task getCurrentTask(Workflow workflow) throws RemoteException {
