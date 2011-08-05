@@ -150,7 +150,7 @@
   <target name="test" depends="build.test">
     <junit fork="no" printsummary="yes" haltonfailure="no">
       <classpath refid="test.class.path" />
-      <test name="com.globalsight.tools.AllTests" />
+      <test name="com.globalsight.tools.gscli.AllTests" />
     </junit>
   </target>
 
