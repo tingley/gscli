@@ -11,7 +11,7 @@ public class FileProfile {
     private String l10nProfile;
     private SortedSet<String> fileExtensions = new TreeSet<String>();
     private String sourceLocale;
-    private SortedSet<String> targetLocales = new TreeSet<String>();;
+    private SortedSet<String> targetLocales = new TreeSet<String>();
  
     FileProfile() {
         
@@ -69,18 +69,8 @@ public class FileProfile {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(getName() + "(ID " + getId() + "); [");
-        boolean first = true;
-        for (String e : getFileExtensions()) {
-            if (!first) {
-                sb.append(", ");
-            }
-            else {
-                first = false;
-            }
-            sb.append(e);
-        }
-        sb.append("]; ")
+        sb.append(getName() + "(ID " + getId() + "); ");
+        sb.append(getFileExtensions()).append("; ")
           .append(getSourceLocale())
           .append("-->")
           .append(getTargetLocales());
