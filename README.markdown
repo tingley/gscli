@@ -3,7 +3,7 @@ gscli: A command-line tool for the GlobalSight TMS
 
 This is a work in progress.  I wrote it to simplify certain types of testing and to provide a framework for automating certain other types of tasks.
 
-The code is packaged under <code>com.globalsight.tools.gscli</code>; however, it is not part of the GlobalSight source tree at the moment.
+The code is packaged under <code>com.globalsight.tools.gscli</code>; however, it is not part of the GlobalSight source tree and has no dependency on the GlobalSight code.
 
 Basics
 ------
