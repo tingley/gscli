@@ -66,6 +66,10 @@ public abstract class Command {
         }
     }
     
+    protected void warn(String message) {
+        System.err.println(message);
+    }
+    
     static final String URL = "url";
     static final Option URL_OPT = OptionBuilder.withArgName("url")
                         .hasArg()

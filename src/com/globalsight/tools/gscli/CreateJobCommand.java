@@ -8,7 +8,10 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
@@ -22,8 +25,6 @@ import org.apache.commons.cli.Options;
  * unless one is specified on the command line.
  */
 @SuppressWarnings("static-access")
-// TODO: I should assume the fileprofile target locale by default, but allow overrides
-// via --target
 public class CreateJobCommand extends WebServiceCommand {
 
     @Override
@@ -55,46 +56,32 @@ public class CreateJobCommand extends WebServiceCommand {
             usage("Can't specify both " + FILEPROFILE + 
                   " and " + FILEPROFILEID + " options.");
         }
-        FileProfile fp = null;
-        if (command.hasOption(FILEPROFILE)) {
-            String fpName = command.getOptionValue(FILEPROFILE);
-            fp = findByName(webService.getFileProfiles(), fpName);
-            if (fp == null) {
-                die("No such file profile: '" + fpName + "'");
-            }
-        }
-        else if (command.hasOption(FILEPROFILEID)) {
-            String fpId = command.getOptionValue(FILEPROFILEID);
-            fp = findById(webService.getFileProfiles(), fpId);
-            if (fp == null) {
-                die("No such file profile id: '" + fpId + "'");
-            }
-        }
-        else {
-            // Try to infer file profile from file extension
-            List<FileProfile> possibleProfiles = new ArrayList<FileProfile>();
-            for (File f : files) {
-                possibleProfiles.addAll(findByExtension(
-                    webService.getFileProfiles(), 
-                    getFileExtension(f)));
-            }
-            if (possibleProfiles.size() > 1) {
-                dieWithProfileList(possibleProfiles);
-            }
-            else if (possibleProfiles.size() == 0) {
-                die("No matching file profile for file extension");
-            }
-            fp = possibleProfiles.get(0);
-            verbose("Guessing file profile: " + fp.getName());
-        }
+        FileProfileResolver fpResolver = 
+            new FileProfileResolver(webService.getFileProfiles());
         
-        Collection<String> targetLocales = null;
-        if (command.hasOption(TARGET)) {
-            targetLocales = Arrays.asList(command.getOptionValues(TARGET));
-        } else {
-            targetLocales = fp.getTargetLocales();
+        Map<File, List<FileProfile>> fileMap = 
+                    new HashMap<File, List<FileProfile>>();
+        for (File f : files) {
+            fileMap.put(f, findProfiles(f, fpResolver, command));
         }
-        
+        List<String> errors = new ArrayList<String>();
+        for (Map.Entry<File, List<FileProfile>> e : fileMap.entrySet()) {
+            List<FileProfile> profiles = e.getValue();
+            if (profiles.size() == 0) {
+                errors.add("Couldn't find a file profile for " + e.getKey());
+            }
+            else if (profiles.size() > 1) {
+                errors.add("Multiple file profiles available for " + 
+                        e.getKey() + ": " + printProfileList(profiles));
+            }
+        }
+        if (errors.size() > 0) {
+            for (String s : errors) {
+                warn(s);
+            }
+            die("Unable to resolve file profiles for job.");
+        }
+
         if (count > 1) {
             verbose("Creating " + count + " jobs:");
         }
@@ -108,10 +95,20 @@ public class CreateJobCommand extends WebServiceCommand {
             String jobName = webService.getUniqueJobName(baseJobName);
             verbose("Got unique job name: " + jobName);
             List<String> filePaths = new ArrayList<String>();
+            List<FileProfile> fileProfiles = new ArrayList<FileProfile>();
+            List<Collection<String>> targetLocales = new ArrayList<Collection<String>>();
             for (File f : files) {
+                FileProfile fp = fileMap.get(f).get(0);
+                fileProfiles.add(fp);
                 filePaths.add(uploadFile(f, jobName, fp, webService));
+                verbose(fp.getName() + " <-- " + f);
+                if (command.hasOption(TARGET)) {
+                    targetLocales.add(Arrays.asList(command.getOptionValues(TARGET)));
+                } else {
+                    targetLocales.add(fp.getTargetLocales());
+                }            
             }
-            webService.createJob(jobName, filePaths, fp, targetLocales);
+            webService.createJob(jobName, filePaths, fileProfiles, targetLocales);
         }
     }
 
@@ -128,43 +125,27 @@ public class CreateJobCommand extends WebServiceCommand {
         return files;
     }
 
-    String getFileExtension(File file) {
-        String basename = file.getName();
-        int i = basename.lastIndexOf('.');
-        if (i == -1 || i + 1 >= basename.length()) {
-            return "";
-        }
-        return basename.substring(i + 1, basename.length());
-    }
-
-    FileProfile findByName(List<FileProfile> fileProfiles, String name) {
-        for (FileProfile fp : fileProfiles) {
-            if (fp.getName().equalsIgnoreCase(name)) {
-                return fp;
+    List<FileProfile> findProfiles(File f, FileProfileResolver fpResolver,
+                                    CommandLine command) {
+        if (command.hasOption(FILEPROFILE)) {
+            String fpName = command.getOptionValue(FILEPROFILE);
+            FileProfile fp = fpResolver.findByName(fpName);
+            if (fp == null) {
+                die("No such file profile: '" + fpName + "'");
             }
+            // TODO: make sure there's an extension match
+            return Collections.singletonList(fp);
         }
-        return null;
-    }
-    
-    FileProfile findById(List<FileProfile> fileProfiles, String id) {
-        for (FileProfile fp : fileProfiles) {
-            if (fp.getId().equals(id)) {
-                return fp;
+        else if (command.hasOption(FILEPROFILEID)) {
+            String fpId = command.getOptionValue(FILEPROFILEID);
+            FileProfile fp = fpResolver.findById(fpId);
+            if (fp == null) {
+                die("No such file profile id: '" + fpId + "'");
             }
+            // TODO: make sure there's an extension match
+            return Collections.singletonList(fp);
         }
-        return null;
-    }
-    
-    List<FileProfile> findByExtension(List<FileProfile> fileProfiles, 
-                                      String fileExtension) {
-        List<FileProfile> fps = new ArrayList<FileProfile>();
-        fileExtension = fileExtension.toLowerCase();
-        for (FileProfile fp : fileProfiles) {
-            if (fp.getFileExtensions().contains(fileExtension)) {
-                fps.add(fp);
-            }
-        }
-        return fps;
+        return fpResolver.findByFileExtension(f);
     }
     
     private static long MAX_SEND_SIZE = 5 * 1000 * 1024; // 5M
@@ -205,21 +186,12 @@ public class CreateJobCommand extends WebServiceCommand {
         return filePath;
     }
     
-    void dieWithProfileList(List<FileProfile> profiles) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Can't guess file profile, multiple matches: [");
-        boolean first = true;
+    String printProfileList(List<FileProfile> profiles) {
+        List<String> s = new ArrayList<String>();
         for (FileProfile fp : profiles) {
-            if (first) {
-                first = false;
-            }
-            else {
-                sb.append(", ");
-            }
-            sb.append(fp.getName());
+            s.add(fp.getName());
         }
-        sb.append("]");
-        die(sb.toString());
+        return Util.join(", ", s);
     }
     
     static final String TARGET = "targetlocale",
