@@ -36,7 +36,7 @@ public abstract class Command {
     // Print usage for this command to stderr and die
     protected void usage() {
         HelpFormatter f = new HelpFormatter();
-        f.printHelp("gstool " + getUsageLine(), getOptions());
+        f.printHelp("gscli " + getUsageLine(), getOptions());
         printExtraHelp(System.err);
         System.exit(1);
     }
