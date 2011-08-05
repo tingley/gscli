@@ -19,13 +19,13 @@ gscli can save credentials for one or more GlobalSight instances/accounts.  Each
     gscli add-profile -url=[URL] -username=[USERNAME] -password=[PASSWORD]
 </pre>
 
-The <code>[URL]</code> parameter should include the full path to the application, but not the location of the web services endpoint (for example, <code>http://localhost/globalsight</code>).
+The <code>[URL]</code> parameter should include the full path to the application, but not the location of the web services endpoint (for example, http://localhost/globalsight).
 
 Profiles are associated with a "profile name", which defaults to the profile's username.  You can override this by specifying <code>-name=[NAME]</code> to <code>add-profile</code>.  The first profile configured will become the default for future invocations.  To use a non-default profile, you can pass the <code>-profile=[PROFILENAME]</code> argument to any command.  To change the default profile, use the <code>set-default-profile</code> command.
 
 Profile information is stored in a file called <code>.globalsight</code> in the user's home directory.  
 
-<b>WARNING</b>: profile credentials are stored in PLAINTEXT.  If this is a problem you can specify <code>-url</code>, <code>-username</code>, and <code>-password</code> explicitly to any command.
+<b>WARNING</b>: profile credentials are stored in <b>PLAINTEXT</b>.  If this is a problem you can specify <code>-url</code>, <code>-username</code>, and <code>-password</code> explicitly to any command.
 
 Getting Help
 ------------
@@ -41,6 +41,7 @@ Creating a Job
 --------------
 
 The <code>create-job</code> command was the original motivation for writing this tool.  <code>create-job</code> will attempt to do as much as possible on its own:
+
 * Job names are based on the first file uploaded
 * File profiles are selected automatically when possible based on file extension
 * All target locales are selected by default
@@ -52,6 +53,7 @@ For example, the following should work (assuming the existence of a valid profil
 </pre>
 
 However, if you want to get fancy, there are a number of other options:
+
 * <code>-fileprofile</code> or <code>-fileprofileid</code> to specify the file profile to use (by name and ID, respectively)
 * <code>-name</code> to manually specify the job name
 * <code>-repeat [N]</code> to repeatedly create the job [N] times in quick succession
