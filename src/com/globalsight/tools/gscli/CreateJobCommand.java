@@ -148,7 +148,7 @@ public class CreateJobCommand extends WebServiceCommand {
         return fpResolver.findByFileExtension(f);
     }
     
-    private static long MAX_SEND_SIZE = 5 * 1000 * 1024; // 5M
+    public static long MAX_SEND_SIZE = 5 * 1000 * 1024; // 5M
     
     // Returns the filepath that was sent to the server
     String uploadFile(File file, String jobName, FileProfile fileProfile,
