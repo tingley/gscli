@@ -97,9 +97,10 @@ public class JobCreator {
     // TODO: refactor with CreateJobCommand
     String uploadFile(File file, String jobName, FileProfile fileProfile,
                     WebService webService) throws Exception {
-        String filePath = file.getAbsolutePath();
+        String filePath = file.getCanonicalPath();
         // XXX This is so janky - why do we have to do this?
-        filePath = filePath.substring(filePath.indexOf(File.separator) + 1);     
+        filePath = filePath.substring(filePath.indexOf(File.separator) + 1);
+        System.out.println("filePath: " + filePath);
         InputStream is = null;
         try {
             long bytesRemaining = file.length();
