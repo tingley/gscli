@@ -95,6 +95,9 @@ public class FileProfilesParser {
             else if (el.equals("description")) {
                 data.current.setDescription(contents.getData());
             }
+            else if (el.equals("sourceFileFormat")) {
+                // New in 8.2 - ignore it
+            }
             else {
                 System.out.println("Ignored: " + el);
             }

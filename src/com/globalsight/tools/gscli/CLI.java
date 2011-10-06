@@ -26,11 +26,7 @@ public class CLI {
         if (cmd.equals("help") && args.length == 2) {
             help(args[1]);
         }
-        Command command = getCommand(commands.get(cmd));
-        if (command == null) {
-            help();
-        }
-        command.setName(cmd);
+        Command command = getCommand(cmd);
         if (args.length > 1) {
             args = Arrays.asList(args).subList(1, args.length)
                                 .toArray(new String[args.length - 1]);
@@ -96,7 +92,16 @@ public class CLI {
         commands.put("accept-task", AcceptTaskCommand.class);
     }
     
-    private static Command getCommand(Class<? extends Command> clazz) {
+    private Command getCommand(String cmd) {
+        Command command = getCommandInstance(commands.get(cmd));
+        if (command == null) {
+            help();
+        }
+        command.setName(cmd);
+        return command;
+    }
+    
+    private static Command getCommandInstance(Class<? extends Command> clazz) {
         if (clazz == null) {
             return null;
         }
@@ -113,7 +118,7 @@ public class CLI {
         f.format("Available commands:\n");
         for (Map.Entry<String, Class<? extends Command>> e : 
                                             commands.entrySet()) {
-            Command c = getCommand(e.getValue());
+            Command c = getCommandInstance(e.getValue());
             f.format("%-20s%s\n", e.getKey(), c.getDescription());
         }
         f.flush();
@@ -121,10 +126,11 @@ public class CLI {
     }
     
     private void help(String cmd) {
-        Command command = getCommand(commands.get(cmd));
+        Command command = getCommand(cmd);
         if (command == null) {
             help();
         }
+        command.setName(cmd);
         command.usage();
     }
     

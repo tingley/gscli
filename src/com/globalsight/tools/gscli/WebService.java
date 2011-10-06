@@ -170,34 +170,31 @@ CompletionDate>
      * Create a job, using the default target locales for the 
      * file profile.
      */
+    // filePath -> fileProfile -> Collection<String> targetLocales
     public void createJob(String jobName, List<String> filePaths,
-                FileProfile fileProfile, Collection<String> targetLocales)
-                throws RemoteException {
-         getService().createJob(getToken(), jobName, "", 
-                 join('|', filePaths),
-                 join('|', repeat(filePaths.size(), fileProfile.getId())),
-                 join('|', repeat(filePaths.size(),
-                                  join(',', targetLocales))));
+              List<FileProfile> fileProfiles, List<Collection<String>> targetLocales)
+              throws RemoteException {
+        List<String> joined = new ArrayList<String>();
+        for (Collection<String> l : targetLocales) {
+            joined.add(Util.join(',', l));
+        }
+        getService().createJob(getToken(), jobName, "", 
+                 Util.join('|', filePaths),
+                 Util.join('|', getProfileIds(fileProfiles)), 
+                 Util.join('|', joined));
          /* For reference, this is the minimal attr xml
          <?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<attributes/>
          */
     }
 
-    private String join(char ch, Collection<String> strings) {
-        StringBuilder sb = new StringBuilder();
-        boolean first = true;
-        for (String s : strings) {
-            if (!first) {
-                sb.append(ch);
-            }
-            else {
-                first = false;
-            }
-            sb.append(s);
+    private List<String> getProfileIds(List<FileProfile> profiles) {
+        List<String> ids = new ArrayList<String>();
+        for (FileProfile fp : profiles) {
+            ids.add(fp.getId());
         }
-        return sb.toString();
+        return ids;
     }
-
+    
     private <T> List<T> repeat(int n, T elem) {
         ArrayList<T> r = new ArrayList<T>(n);
         for (int i=0; i<n; i++) {
