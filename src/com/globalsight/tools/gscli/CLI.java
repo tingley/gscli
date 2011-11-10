@@ -10,7 +10,7 @@ import java.util.TreeMap;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.GnuParser;
-import org.apache.commons.cli.MissingOptionException;
+import org.apache.commons.cli.ParseException;;
 
 public class CLI {
 
@@ -55,7 +55,7 @@ public class CLI {
                 userData.store(dataFile);
             }
         }
-        catch (MissingOptionException e) {
+        catch (ParseException e) {
             System.err.println(e.getMessage());
             command.usage();
         }
