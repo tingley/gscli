@@ -187,6 +187,65 @@ CompletionDate>
          */
     }
 
+    public List<Project> getAllProjects() throws RemoteException {
+        try {
+            return new ProjectsParser(factory).parse(
+                            getService().getAllProjects(getToken()));
+        } 
+        catch (SNAXUserException e) {
+            throw new RuntimeException(e);
+        } 
+        catch (XMLStreamException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    /**
+     * Add a user.
+     */
+    public void createUser(String username, String password, 
+            String firstName, String lastName, String emailAddress,
+            List<String> permissionGroups, String roles,
+            boolean inAllProjects, String[] projectIds) 
+                throws RemoteException {
+        // XXX 
+        // Notes from looking at WS code
+        // - p_status is ignored
+        // - If inAllProjects is set, then projectIds[] is ignored
+        // - projectIds[] is actually the stringified form of the numeric id
+        //   (ie the long) of the project
+        // - roles information is in a random XML format - see comment below
+        // - permissionGroups values are permission group names
+        //   (eg "LocalizationParticipant")
+        getService().createUser(getToken(), username, password, 
+                firstName, lastName, emailAddress, 
+                (String[])permissionGroups.toArray(), 
+                "", roles, inAllProjects, projectIds);
+        
+        // How can I get a list of projects?
+        // How can I get a list of permission groups?
+        // How can I get a list of activities for roles?
+    }
+
+    /**
+     * Roles XML (from Ambassador.parseRoles()): 
+     * <?xml version=\"1.0\"?>
+     *   <roles>
+     *      <role>
+     *          <sourceLocale>en_US</sourceLocale>
+     *          <targetLocale>de_DE</targetLocale>
+     *          <activities>
+     *              <activity>
+     *                  <name>Dtp1</name>
+     *              </activity>
+     *              <activity>
+     *                  <name>Dtp2</name>
+     *              </activity>
+     *          </activities>
+     *      </role>
+     *   </roles>
+     */
+    
     private List<String> getProfileIds(List<FileProfile> profiles) {
         List<String> ids = new ArrayList<String>();
         for (FileProfile fp : profiles) {
