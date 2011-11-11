@@ -187,6 +187,22 @@ CompletionDate>
          */
     }
 
+    public List<ActivityType> getAllActivityTypes() throws RemoteException {
+        try {
+            return new ActivityTypesParser(factory).parse(
+                            getService().getAllActivityTypes(getToken()));
+        } 
+        catch (SNAXUserException e) {
+            throw new RuntimeException(e);
+        } 
+        catch (XMLStreamException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+    /**
+     * Get all permission groups available to the current user.
+     */
     public List<Project> getAllProjects() throws RemoteException {
         try {
             return new ProjectsParser(factory).parse(
@@ -206,7 +222,7 @@ CompletionDate>
     public void createUser(String username, String password, 
             String firstName, String lastName, String emailAddress,
             List<String> permissionGroups, String roles,
-            boolean inAllProjects, String[] projectIds) 
+            boolean inAllProjects, List<Project> projects) 
                 throws RemoteException {
         // XXX 
         // Notes from looking at WS code
@@ -217,13 +233,18 @@ CompletionDate>
         // - roles information is in a random XML format - see comment below
         // - permissionGroups values are permission group names
         //   (eg "LocalizationParticipant")
+        List<String> projectIds = new ArrayList<String>();
+        for (Project p : projects) {
+            projectIds.add(p.getId());
+        }
+        
         getService().createUser(getToken(), username, password, 
                 firstName, lastName, emailAddress, 
                 (String[])permissionGroups.toArray(), 
-                "", roles, inAllProjects, projectIds);
+                "", roles, inAllProjects, 
+                (String[])projectIds.toArray());
         
-        // How can I get a list of projects?
-        // How can I get a list of permission groups?
+        // How can I get a list of permission groups? - appears impossible
         // How can I get a list of activities for roles?
     }
 

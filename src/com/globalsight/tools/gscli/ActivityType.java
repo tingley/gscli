@@ -1,7 +1,7 @@
 package com.globalsight.tools.gscli;
 
-public class Project {   
-    private String id, name, description, pmUser;
+public class ActivityType {
+    private String id, name, description;
 
     public String getId() {
         return id;
@@ -26,20 +26,11 @@ public class Project {
     public void setDescription(String description) {
         this.description = description;
     }
-
-    public String getPmUser() {
-        return pmUser;
-    }
-
-    public void setPmUser(String pmUser) {
-        this.pmUser = pmUser;
-    }
     
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(getName() + " (ID " + getId() + "); ");
-        sb.append("PM: ").append(getPmUser());
+        sb.append(getName() + " (ID " + getId() + ")");
         return sb.toString();
     }
 }
