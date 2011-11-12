@@ -1,22 +1,15 @@
 package com.globalsight.tools.gscli;
 
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.events.Characters;
-import javax.xml.stream.events.EndElement;
-import javax.xml.stream.events.StartElement;
 
-import net.sundell.snax.DefaultElementHandler;
-import net.sundell.snax.NodeModel;
-import net.sundell.snax.NodeModelBuilder;
-import net.sundell.snax.SNAXParser;
-import net.sundell.snax.SNAXUserException;
+public class ProjectsParser extends SimpleListParser<Project> {
 
-public class ProjectsParser {
+    ProjectsParser(XMLInputFactory factory) {
+        super(factory);
+    }
     /*
        <?xml version="1.0" encoding="UTF-8" ?>
         <ProjectInformation>
@@ -28,58 +21,24 @@ public class ProjectsParser {
         </Project>
         </ProjectInformation>
      */
-    
-    static final NodeModel<P> MODEL = new NodeModelBuilder<P>() {{
-        elements("ProjectInformation", "Project").attach(new ProjectHandler());
-        elements("ProjectInformation", "Project").child()
-                                             .attach(new ProjectDataHandler());
-    }}.build();
 
-    private XMLInputFactory factory;
-    
-    ProjectsParser(XMLInputFactory factory) {
-        this.factory = factory;
+    @Override
+    String getListElement() {
+        return "ProjectInformation";
     }
-    
-    // TODO: refactor some of this stuff
-    public List<Project> parse(String projectsXml) 
-                        throws SNAXUserException, XMLStreamException {
-        SNAXParser<P> parser = SNAXParser.createParser(factory, MODEL);
-        P p = new P();
-        parser.parse(new StringReader(projectsXml), p);
-        return p.projects;
+
+    @Override
+    String getListEntryElement() {
+        return "Project";
     }
-    
-    static class P {
-        List<Project> projects = new ArrayList<Project>();
-        Project current = new Project();
-    }
-    
-    static class ProjectDataHandler extends DefaultElementHandler<P> {
-        @Override
-        public void characters(StartElement parent, Characters contents, 
-                                P data) throws SNAXUserException {
-            String el = parent.getName().getLocalPart();
-            if (el.equals("id")) {
-                data.current.setId(contents.getData());
+
+    @Override
+    SimpleListParser.Data<Project> getData() {
+        return new SimpleListParser.SimpleData() {
+            @Override
+            Project newInstance() {
+                return new Project();
             }
-            else if (el.equals("name")) {
-                data.current.setName(contents.getData());
-            }
-            else if (el.equals("description")) {
-                data.current.setDescription(contents.getData());
-            }
-            else if (el.equals("projectmanager")) {
-                data.current.setPmUser(contents.getData());
-            }
-        }
-    }
-    static class ProjectHandler extends DefaultElementHandler<P> {
-        @Override
-        public void endElement(EndElement el, P data)
-                throws SNAXUserException {
-            data.projects.add(data.current);
-            data.current = new Project();
-        }
+        };
     }
 }

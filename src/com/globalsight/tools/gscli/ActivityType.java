@@ -1,6 +1,6 @@
 package com.globalsight.tools.gscli;
 
-public class ActivityType {
+public class ActivityType implements SimpleListParser.Settable {
     private String id, name, description;
 
     public String getId() {
@@ -26,6 +26,19 @@ public class ActivityType {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    @Override
+    public void set(String name, String value) {
+        if (name.equals("id")) {
+            setId(value);
+        }
+        else if (name.equals("name")) {
+            setName(value);
+        }
+        else if (name.equals("description")) {
+            setDescription(value);
+        }
+    }
     
     @Override
     public String toString() {
@@ -33,4 +46,5 @@ public class ActivityType {
         sb.append(getName() + " (ID " + getId() + ")");
         return sb.toString();
     }
+
 }

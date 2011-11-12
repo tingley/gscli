@@ -1,6 +1,6 @@
 package com.globalsight.tools.gscli;
 
-public class Project {   
+public class Project implements SimpleListParser.Settable {   
     private String id, name, description, pmUser;
 
     public String getId() {
@@ -33,6 +33,21 @@ public class Project {
 
     public void setPmUser(String pmUser) {
         this.pmUser = pmUser;
+    }
+    
+    public void set(String name, String value) {
+        if (name.equals("id")) {
+            setId(value);
+        }
+        else if (name.equals("name")) {
+            setName(value);
+        }
+        else if (name.equals("description")) {
+            setDescription(value);
+        }
+        else if (name.equals("projectmanager")) {
+            setPmUser(value);
+        }
     }
     
     @Override
