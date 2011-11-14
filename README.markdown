@@ -9,7 +9,7 @@ Basics
 ------
 * To build: <code>ant</code>
 * To run tests: <code>ant test</code>
-* To run: use <code>gscli.sh</code>/<code>gscli.bat</code> as appropriate
+* To run: use <code>gscli</code>/<code>gscli.bat</code> as appropriate
 
 Profiles
 --------
