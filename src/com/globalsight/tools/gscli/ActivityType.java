@@ -3,6 +3,13 @@ package com.globalsight.tools.gscli;
 public class ActivityType implements SimpleListParser.Settable {
     private String id, name, description;
 
+    ActivityType() { }
+    
+    ActivityType(String id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+    
     public String getId() {
         return id;
     }

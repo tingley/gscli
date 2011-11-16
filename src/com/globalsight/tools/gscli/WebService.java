@@ -1,13 +1,16 @@
 package com.globalsight.tools.gscli;
 
+import java.io.StringWriter;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 
 import net.sundell.snax.SNAXUserException;
@@ -217,11 +220,34 @@ CompletionDate>
     }
     
     /**
-     * Add a user.
+     * Add a user.  This user will belong to all projects.
      */
     public void createUser(String username, String password, 
             String firstName, String lastName, String emailAddress,
-            List<String> permissionGroups, String roles,
+            List<String> permissionGroups, List<Role> roles) 
+            throws RemoteException {
+        List<Project> projects = Collections.emptyList();
+        _createUser(username, password, firstName, lastName,
+                    emailAddress, permissionGroups, roles, true, 
+                    projects);
+    }
+    /**
+     * Add a user to the specified projects.
+     */
+    public void createUser(String username, String password, 
+            String firstName, String lastName, String emailAddress,
+            List<String> permissionGroups, List<Role> roles,
+            List<Project> projects) 
+            throws RemoteException {
+        _createUser(username, password, firstName, lastName,
+                    emailAddress, permissionGroups, roles, false, 
+                    projects);
+    }
+
+
+    public void _createUser(String username, String password, 
+            String firstName, String lastName, String emailAddress,
+            List<String> permissionGroups, List<Role> roles,
             boolean inAllProjects, List<Project> projects) 
                 throws RemoteException {
         // XXX 
@@ -231,6 +257,8 @@ CompletionDate>
         // - projectIds[] is actually the stringified form of the numeric id
         //   (ie the long) of the project
         // - roles information is in a random XML format - see comment below
+        //      It is a representation of 
+        //          (srcLocale, tgtLocale) -> List[Activity]
         // - permissionGroups values are permission group names
         //   (eg "LocalizationParticipant")
         List<String> projectIds = new ArrayList<String>();
@@ -238,14 +266,24 @@ CompletionDate>
             projectIds.add(p.getId());
         }
         
+        // TODO inject the factory
+        StringWriter roleXml = new StringWriter();
+        try {
+            RoleXMLWriter roleWriter = 
+                    new RoleXMLWriter(XMLOutputFactory.newFactory());
+            roleWriter.writeXML(roleXml, roles);
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        
+        // How can I get a list of permission groups? - appears impossible
+
         getService().createUser(getToken(), username, password, 
                 firstName, lastName, emailAddress, 
                 (String[])permissionGroups.toArray(), 
-                "", roles, inAllProjects, 
-                (String[])projectIds.toArray());
-        
-        // How can I get a list of permission groups? - appears impossible
-        // How can I get a list of activities for roles?
+                "", roleXml.toString(), inAllProjects, 
+                (String[])projectIds.toArray());        
     }
 
     /**

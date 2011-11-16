@@ -92,6 +92,8 @@ public class CLI {
         commands.put("accept-task", AcceptTaskCommand.class);
         commands.put("projects", ProjectsCommand.class);
         commands.put("activity-types", ActivityTypesCommand.class);
+        commands.put("create-user", CreateUserCommand.class);
+        commands.put("show-profiles", ShowProfileCommand.class);
     }
     
     private Command getCommand(String cmd) {

@@ -66,6 +66,10 @@ public abstract class Command {
         }
     }
     
+    protected void out(String message) {
+        System.out.println(message);
+    }
+    
     protected void warn(String message) {
         System.err.println(message);
     }
