@@ -278,12 +278,11 @@ CompletionDate>
         }
         
         // How can I get a list of permission groups? - appears impossible
-
+        String[] perms = permissionGroups.toArray(new String[0]);
+        String[] projs = projectIds.toArray(new String[0]);
         getService().createUser(getToken(), username, password, 
-                firstName, lastName, emailAddress, 
-                (String[])permissionGroups.toArray(), 
-                "", roleXml.toString(), inAllProjects, 
-                (String[])projectIds.toArray());        
+                firstName, lastName, emailAddress, perms, 
+                "", roleXml.toString(), inAllProjects, projs);        
     }
 
     /**

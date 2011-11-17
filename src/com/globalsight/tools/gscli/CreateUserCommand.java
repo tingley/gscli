@@ -143,7 +143,9 @@ public class CreateUserCommand extends WebServiceCommand {
         // TODO
         // - parse roles, generate Role
         // - validate permission groups (possible?)
-        // - parse fullname
+
+        webService.createUser(userId, password, firstName, lastName, email, 
+                              permissionGroups, roles);
     }
     
     class FullName {
