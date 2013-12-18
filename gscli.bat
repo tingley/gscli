@@ -1,2 +1,2 @@
 @echo off
-java -cp "build/gscli.jar;lib/*" com.spartansoftwareinc.globalsight.gscli.CLI %*
+java -jar target/gscli-1.0-SNAPSHOT.jar %*
