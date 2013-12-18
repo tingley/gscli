@@ -5,9 +5,20 @@ This is a work in progress.  I wrote it to simplify certain types of testing and
 
 Basics
 ------
-* To build: <code>ant</code>
-* To run tests: <code>ant test</code>
-* To run: use <code>gscli</code>/<code>gscli.bat</code> as appropriate
+gscli builds with [maven](http://maven.apache.org/).  It depends on the [snax-xml](https://github.com/tingley/snax-xml) library, which you will need to build and install in a local repository.
+
+* To build: <code>mvn package</code>.  This will compile, run tests, and generate a runnable <code>gscli-1.0-SNAPSHOT.jar</code> file in the <code>target</code> directory.
+* To run: run <code>java -jar target/gscli-1.0-SNAPSHOT.jar</code> or use the <code>gscli</code>/<code>gscli.bat</code> wrapper scripts as appropriate
+
+Getting Help
+------------
+To get a list of commands, run <code>gscli</code> with no arguments.
+
+To get (limited) help for a command, run
+
+<pre>
+    gscli help [COMMAND]
+</pre>
 
 Profiles
 --------
@@ -24,16 +35,6 @@ Profiles are associated with a "profile name", which defaults to the profile's u
 Profile information is stored in a file called <code>.globalsight</code> in the user's home directory.  
 
 <b>WARNING</b>: profile credentials are stored in <b>PLAINTEXT</b>.  If this is a problem you can specify <code>-url</code>, <code>-username</code>, and <code>-password</code> explicitly to any command.
-
-Getting Help
-------------
-To get a list of commands, run <code>gscli</code> with no arguments.
-
-To get (limited) help for a command, run
-
-<pre>
-    gscli help [COMMAND]
-</pre>
 
 Creating a Job
 --------------
