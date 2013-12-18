@@ -5,10 +5,12 @@ This is a work in progress.  I wrote it to simplify certain types of testing and
 
 Basics
 ------
-gscli builds with [maven](http://maven.apache.org/).  It depends on the [snax-xml](https://github.com/tingley/snax-xml) library, which you will need to build and install in a local repository.
+* Download the latest [release](https://github.com/tingley/gscli/releases).
+* To run: run <code>java -jar gscli-1.0-SNAPSHOT.jar</code>.
 
-* To build: <code>mvn package</code>.  This will compile, run tests, and generate a runnable <code>gscli-1.0-SNAPSHOT.jar</code> file in the <code>target</code> directory.
-* To run: run <code>java -jar target/gscli-1.0-SNAPSHOT.jar</code> or use the <code>gscli</code>/<code>gscli.bat</code> wrapper scripts as appropriate
+Building the code
+-----------------
+gscli builds with [maven](http://maven.apache.org/).  It depends on the [snax-xml](https://github.com/tingley/snax-xml) library, which you will need to build and install in a local repository.
 
 Getting Help
 ------------
