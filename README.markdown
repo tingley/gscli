@@ -6,7 +6,7 @@ This is a work in progress.  I wrote it to simplify certain types of testing and
 Basics
 ------
 * Download the latest [release](https://github.com/tingley/gscli/releases).
-* To run: run <code>java -jar gscli-1.0-SNAPSHOT.jar</code>.
+* To run: run <code>java -jar gscli-1.0-alpha1.jar</code> (or whatever jar is included in the release).
 
 Building the code
 -----------------
