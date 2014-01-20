@@ -21,6 +21,9 @@ public abstract class WebServiceCommand extends Command {
         if (command.hasOption(PROFILE)) {
             profile = userData.getProfiles()
                 .getProfile(command.getOptionValue(PROFILE));
+            if (profile == null) {
+                die("Not such profile: '" + command.getOptionValue(PROFILE) + "'");
+            }
         }
         else {
             profile = userData.getProfiles().getDefaultProfile();
