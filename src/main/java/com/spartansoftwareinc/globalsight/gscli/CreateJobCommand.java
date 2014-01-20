@@ -32,7 +32,7 @@ public class CreateJobCommand extends WebServiceCommand {
             WebService webService) throws Exception {
         // Make sure we have at least one file to upload
         if (command.getArgs().length == 0) {
-            die("Must specify at least one file to import.");
+            usage("Must specify at least one file to import.");
         }
         
         List<File> files = getFileList(command);
