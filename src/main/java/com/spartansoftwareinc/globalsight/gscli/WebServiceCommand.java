@@ -1,5 +1,6 @@
 package com.spartansoftwareinc.globalsight.gscli;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.Date;
 
@@ -11,13 +12,15 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 
 @SuppressWarnings("static-access")
-public abstract class WebServiceCommand extends Command {
+public abstract class WebServiceCommand extends GSCommand {
 
     private Profile profile;
     
     // Default implementation that actually wants a webservice.
-    public void handle(CommandLine command, UserData userData) 
-                                throws Exception {
+    @Override
+    public void handle(CommandLine command) {
+        GSUserData userData = getUserData();
+
         if (command.hasOption(PROFILE)) {
             profile = userData.getProfiles()
                 .getProfile(command.getOptionValue(PROFILE));
@@ -63,10 +66,16 @@ public abstract class WebServiceCommand extends Command {
                 catch (RemoteException e2) {
                     dieWithError(parser.parse(e2.getMessage()));
                 }
+                catch (IOException e2) {
+                    throw new RuntimeException(e2);
+                }
             }
             else {
                 dieWithError(error);
             }
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -84,8 +93,8 @@ public abstract class WebServiceCommand extends Command {
         return options;
     }
     
-    void execWithAuth(WebService ws, UserData userData, CommandLine command,
-                      String token, Profile profile) throws Exception {
+    void execWithAuth(WebService ws, GSUserData userData, CommandLine command,
+                      String token, Profile profile) throws RemoteException, IOException {
         if (token == null) {
             token = authorize(ws, userData);
             verbose("Received token " + token);
@@ -110,8 +119,7 @@ public abstract class WebServiceCommand extends Command {
         return profile;
     }
     
-    protected String authorize(WebService ws, UserData userData) 
-                        throws Exception {
+    protected String authorize(WebService ws, GSUserData userData) throws RemoteException {
         String username = null, password = null;
         if (getProfile() != null) {
             username = getProfile().getUsername();
@@ -126,7 +134,7 @@ public abstract class WebServiceCommand extends Command {
         return ws.login(username, password);
     }
     
-    protected String getAuthToken(UserData userData, Profile profile) throws Exception {
+    protected String getAuthToken(GSUserData userData, Profile profile) {
         if (profile == null) {
             return null;
         }
@@ -155,7 +163,7 @@ public abstract class WebServiceCommand extends Command {
     
     public static final long ONE_HOUR = 1000 * 60 * 60;
     
-    protected abstract void execute(CommandLine command, UserData userData, 
-                WebService webService) throws Exception;
+    protected abstract void execute(CommandLine command, GSUserData userData, 
+                WebService webService) throws RemoteException, IOException;
     
 }

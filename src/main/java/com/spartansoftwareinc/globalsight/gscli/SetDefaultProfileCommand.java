@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 
-public class SetDefaultProfileCommand extends Command {
+public class SetDefaultProfileCommand extends GSCommand {
 
     @Override
     public String getDescription() {
@@ -13,19 +13,19 @@ public class SetDefaultProfileCommand extends Command {
 
     @SuppressWarnings("unchecked")
     @Override
-    public void handle(CommandLine command, UserData userData) throws Exception {
+    public void handle(CommandLine command) {
         List<String> args = command.getArgList();
         if (args.size() != 1) {
             usage();
         }
         String name = args.get(0);
-        Profiles profiles = userData.getProfiles();
+        Profiles profiles = getUserData().getProfiles();
         Profile p = profiles.getProfile(name);
         if (p == null) {
             die("No such profile: " + name);
         }
         profiles.setDefaultProfile(p);
-        userData.setProfiles(profiles);
+        getUserData().setProfiles(profiles);
         verbose("Set default profile to '" + p.getProfileName() + "'");
     }
 

@@ -1,5 +1,6 @@
 package com.spartansoftwareinc.globalsight.gscli;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.List;
@@ -10,8 +11,8 @@ import org.apache.commons.cli.CommandLine;
 public class ShowJobsCommand extends WebServiceCommand {
 
     @Override
-    protected void execute(CommandLine command, UserData userData,
-        WebService webService) throws Exception {
+    protected void execute(CommandLine command, GSUserData userData,
+        WebService webService) throws RemoteException {
         String[] args = command.getArgs();
         List<Job> jobs = webService.getJobs();
         if (args.length == 0) {
@@ -42,7 +43,7 @@ public class ShowJobsCommand extends WebServiceCommand {
         }
     }
     
-    void showAllJobs(List<Job> jobs) throws Exception {
+    void showAllJobs(List<Job> jobs) throws RemoteException {
         printHeader();
         for (Job job : jobs) {
             printShort(job);

@@ -4,7 +4,7 @@ import java.util.Formatter;
 
 import org.apache.commons.cli.CommandLine;
 
-public class ShowProfileCommand extends Command {
+public class ShowProfileCommand extends GSCommand {
 
     @Override
     public String getDescription() {
@@ -12,8 +12,8 @@ public class ShowProfileCommand extends Command {
     }
 
     @Override
-    public void handle(CommandLine command, UserData userData) throws Exception {
-        Profiles profiles = userData.getProfiles();
+    public void handle(CommandLine command) {
+        Profiles profiles = getUserData().getProfiles();
         StringBuilder sb = new StringBuilder();
         Formatter f = new Formatter(sb);
         f.format("Available Profiles:\n");

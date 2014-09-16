@@ -3,6 +3,8 @@ package com.spartansoftwareinc.globalsight.gscli;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.sundell.cauliflower.UserDataComponent;
+
 // sessions.[profilename].token
 // sessions.[profilename].timestamp
 public class Sessions implements UserDataComponent {

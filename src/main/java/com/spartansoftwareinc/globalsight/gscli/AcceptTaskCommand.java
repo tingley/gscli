@@ -1,5 +1,6 @@
 package com.spartansoftwareinc.globalsight.gscli;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,8 +13,8 @@ import org.apache.commons.cli.Options;
 class AcceptTaskCommand extends WebServiceCommand {
     
     @Override
-    protected void execute(CommandLine command, UserData userData,
-            WebService webService) throws Exception {
+    protected void execute(CommandLine command, GSUserData userData,
+            WebService webService) throws RemoteException {
         
         if (command.hasOption(JOB)) {
             acceptByJob(command, webService);
@@ -23,8 +24,7 @@ class AcceptTaskCommand extends WebServiceCommand {
         }
     }
     
-    private void acceptByJob(CommandLine command, WebService webService)
-                            throws Exception {
+    private void acceptByJob(CommandLine command, WebService webService) throws RemoteException {
         // If there are spare arguments, they are interpreted 
         // as target locales
         String arg = command.getOptionValue(JOB);
@@ -42,7 +42,7 @@ class AcceptTaskCommand extends WebServiceCommand {
     }
     
     private void acceptByTaskId(CommandLine command, WebService webService) 
-                            throws Exception {
+                            throws RemoteException {
         String[] args = command.getArgs();
         if (args.length == 0) {
             usage();

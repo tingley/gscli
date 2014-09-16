@@ -1,5 +1,6 @@
 package com.spartansoftwareinc.globalsight.gscli;
 
+import java.rmi.RemoteException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -9,8 +10,8 @@ import org.apache.commons.cli.CommandLine;
 public class ProjectsCommand extends WebServiceCommand {
 
     @Override
-    protected void execute(CommandLine command, UserData userData,
-            WebService webService) throws Exception {
+    protected void execute(CommandLine command, GSUserData userData,
+            WebService webService) throws RemoteException {
         List<Project> projects = webService.getAllProjects();
         Collections.sort(projects, new ProjectNameComparator());
         for (Project p : projects) {

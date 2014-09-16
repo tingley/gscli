@@ -1,5 +1,6 @@
 package com.spartansoftwareinc.globalsight.gscli;
 
+import java.rmi.RemoteException;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
@@ -9,7 +10,7 @@ import org.apache.commons.cli.Options;
 
 // Usage: add-profile -url=[..] -username=[...] -password=[..]
 @SuppressWarnings("static-access")
-public class AddProfileCommand extends Command {
+public class AddProfileCommand extends GSCommand {
     @Override
     public String getDescription() {
         return "store a profile for a GlobalSight server"; 
@@ -55,7 +56,7 @@ public class AddProfileCommand extends Command {
     
     @SuppressWarnings("unchecked")
     @Override
-    public void handle(CommandLine command, UserData userData) throws Exception {
+    public void handle(CommandLine command) {
         List<String> args = command.getArgList();
         if (args.size() != 0) {
             usage();
@@ -66,11 +67,10 @@ public class AddProfileCommand extends Command {
         String profileName = command.hasOption(PROFILENAME) ?
                 command.getOptionValue(PROFILENAME) : username;
         // TODO: check for collisions
+        GSUserData userData = getUserData();
         Profiles profiles = userData.getProfiles();
         profiles.addProfile(
                 new Profile(profileName, url, username, password));
         userData.setProfiles(profiles);
     }
-
-
 }

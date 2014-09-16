@@ -91,8 +91,8 @@ public class CreateUserCommand extends WebServiceCommand {
     }
     
     @Override
-    protected void execute(CommandLine command, UserData userData,
-            WebService webService) throws Exception {
+    protected void execute(CommandLine command, GSUserData userData,
+            WebService webService) throws RemoteException {
         if (command.getArgs().length != 0) {
             usage();
         }

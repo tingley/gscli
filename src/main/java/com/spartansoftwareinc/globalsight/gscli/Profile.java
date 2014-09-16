@@ -3,6 +3,8 @@ package com.spartansoftwareinc.globalsight.gscli;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.sundell.cauliflower.UserDataComponent;
+
 public class Profile implements UserDataComponent {
     private String profileName;
     private String url;

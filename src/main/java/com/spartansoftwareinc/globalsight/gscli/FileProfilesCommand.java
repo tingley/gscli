@@ -1,12 +1,12 @@
 package com.spartansoftwareinc.globalsight.gscli;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
-
 import org.apache.commons.cli.Option;
 
 @SuppressWarnings("static-access")
@@ -18,8 +18,8 @@ public class FileProfilesCommand extends WebServiceCommand {
     }
 
     @Override
-    protected void execute(CommandLine command, UserData userData,
-                        WebService webService) throws Exception {
+    protected void execute(CommandLine command, GSUserData userData,
+                        WebService webService) throws RemoteException {
         List<Filter> filters = getFilters(command);
         List<FileProfile> profiles = webService.getFileProfiles();
 PROFILE:

@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.sundell.cauliflower.UserDataComponent;
+
 public class Session implements UserDataComponent {
 
     private String authToken;

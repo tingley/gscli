@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.sundell.cauliflower.UserDataComponent;
+
 public class Profiles implements UserDataComponent {
 
     private Map<String, Profile> profiles = 

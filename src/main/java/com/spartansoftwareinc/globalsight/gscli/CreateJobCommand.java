@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,8 +29,8 @@ import org.apache.commons.cli.Options;
 public class CreateJobCommand extends WebServiceCommand {
 
     @Override
-    protected void execute(CommandLine command, UserData userData,
-            WebService webService) throws Exception {
+    protected void execute(CommandLine command, GSUserData userData,
+            WebService webService) throws RemoteException, IOException {
         // Make sure we have at least one file to upload
         if (command.getArgs().length == 0) {
             usage("Must specify at least one file to import.");
@@ -152,7 +153,7 @@ public class CreateJobCommand extends WebServiceCommand {
     
     // Returns the filepath that was sent to the server
     String uploadFile(File file, String jobName, FileProfile fileProfile,
-                    WebService webService) throws Exception {
+                    WebService webService) throws RemoteException, IOException {
         String filePath = file.getAbsolutePath();
         // XXX This is so janky - why do we have to do this?
         filePath = filePath.substring(filePath.indexOf(File.separator) + 1);     
