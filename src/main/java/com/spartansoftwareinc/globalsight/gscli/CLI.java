@@ -8,6 +8,11 @@ import net.sundell.cauliflower.*;
 
 public class CLI extends net.sundell.cauliflower.CLI {
 
+    @Override
+    public String getName() {
+        return Version.PROJECT_NAME;
+    }
+
     /**
      * Return data file location in the user's home directory.  Note that
      * this file may not exist.
@@ -44,6 +49,7 @@ public class CLI extends net.sundell.cauliflower.CLI {
         commands.put("activity-types", ActivityTypesCommand.class);
         commands.put("create-user", CreateUserCommand.class);
         commands.put("show-profiles", ShowProfileCommand.class);
+        commands.put("version", VersionCommand.class);
     }
 
     public static void main(String[] args) {

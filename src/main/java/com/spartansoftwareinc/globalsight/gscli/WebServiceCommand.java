@@ -81,16 +81,46 @@ public abstract class WebServiceCommand extends GSCommand {
 
     static final String PROFILE = "profile";
     static final Option PROFILE_OPT = OptionBuilder
-        .withArgName(PROFILE)
-        .hasArg()
-        .withDescription("profile name")
-        .create(PROFILE);
+                        .withArgName(PROFILE)
+                        .hasArg()
+                        .withDescription("profile name")
+                        .create(PROFILE);
+    static final String URL = "url";
+    static final Option URL_OPT = OptionBuilder.withArgName("url")
+                        .hasArg()
+                        .withDescription("GlobalSight URL")
+                        .isRequired(false)
+                        .create(URL);
+    static final String USER = "user";
+    static final Option USER_OPT = OptionBuilder.withArgName("user")
+                        .hasArg()
+                        .withDescription("user name")
+                        .isRequired(false)
+                        .create(USER);
+    static final String PASSWORD = "password";
+    static final Option PASSWORD_OPT = OptionBuilder.withArgName("password")
+                        .hasArg()
+                        .withDescription("password")
+                        .isRequired(false)
+                        .create(PASSWORD);
+
+    protected Options getDefaultOptions() {
+        Options opts = new Options();
+        opts.addOption(URL_OPT);
+        opts.addOption(USER_OPT);
+        opts.addOption(PASSWORD_OPT);
+        opts.addOption(PROFILE_OPT);
+        return opts;
+    }
+
+    @Override
+    protected String getUsageFooter() {
+        return "Specify GS credentials with either -profile or the combination of -url, -name, and -password.";
+    }
     
     @Override
     public Options getOptions() {
-        Options options = super.getOptions();
-        options.addOption(PROFILE_OPT);
-        return options;
+        return getDefaultOptions();
     }
     
     void execWithAuth(WebService ws, GSUserData userData, CommandLine command,
@@ -165,5 +195,5 @@ public abstract class WebServiceCommand extends GSCommand {
     
     protected abstract void execute(CommandLine command, GSUserData userData, 
                 WebService webService) throws RemoteException, IOException;
-    
+
 }
