@@ -10,7 +10,7 @@ Basics
 
 Building the code
 -----------------
-gscli builds with [maven](http://maven.apache.org/).  It depends on the [snax-xml](https://github.com/tingley/snax-xml) library, which you will need to build and install in a local repository.
+gscli builds with [maven](http://maven.apache.org/).
 
 Getting Help
 ------------
